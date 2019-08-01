@@ -1,0 +1,22 @@
+{
+  "name": "gmtk-2019",
+  "version": "1.0.0",
+  "description": "A repository for the game developed by Jake Miller and Nicole Magerko for the 2019 Game Maker's Tool-Kit Game Jam.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JMiller-2020/GMTK-2019.git"
+  },
+  "author": "Nicole Magerko and Jake Miller",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JMiller-2020/GMTK-2019/issues"
+  },
+  "homepage": "https://github.com/JMiller-2020/GMTK-2019#readme",
+  "dependencies": {
+    "http-server": "^0.11.1"
+  }
+}
