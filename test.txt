@@ -1,9 +1,12 @@
-J 1
-J 2
-J 3
-J 4
-
-N 12
-N 10
-This is my test, I am a Nicole of the house Magerko, and I am excited to build a game
-Thank you for your time.
+J a 1
+J a 2
+J a 3
+J a 4
+  a
+N a 12
+N a 10
+T a his is my test, I am a Nicole of the house Magerko, and I am excited to build a game
+T a hank you for your time.
+  a
+  a
+  a
