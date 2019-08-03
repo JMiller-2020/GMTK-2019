@@ -28,24 +28,31 @@ function gameLoop(tickCount) {
 }
 
 function handleResize() {
-  const w = window.innerWidth
-  const h = window.innerHeight
+  let w = window.innerWidth
+  let h = window.innerHeight
+  const screenRatio = w / h
+  if(w/h > model.ratio) {
+    w = h * model.ratio
+  } else {
+    h = w / model.ratio
+  }
   view.resize(w, h)
-  model.w = w
-  model.h = h
 }
 
 function init() {
 
   canvas = document.getElementById('game-canvas')
 
-  model      = new Model()
+  model      = new Model(60, 40)
   view       = new View(canvas)
   controller = new Controller()
   engine     = new Engine(TICK_LENGTH, this.gameLoop)
 
   handleResize()
   addEventListener('resize', handleResize)
+
+  // view.setBounds(0, 0, model.w, model.h)
+  view.setBounds(0, 0, model.w, model.h)
 
   console.log('initialized.')
   main()

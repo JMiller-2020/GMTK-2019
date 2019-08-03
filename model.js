@@ -5,14 +5,18 @@ class Model {
     this.w = w
     this.h = h
 
-    this.gravity = 10
+    this.gravity = .4
 
-    this.playerX = 10
-    this.playerY = 10
-    this.playerW = 32
-    this.playerH = 48
+    this.playerX = 2
+    this.playerY = 2
+    this.playerW = 2
+    this.playerH = 3
     this.playerVX = 0
     this.playerVY = 0
+  }
+
+  get ratio() {
+    return this.w / this.h
   }
 
   tick() {
