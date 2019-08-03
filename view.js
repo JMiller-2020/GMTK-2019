@@ -64,9 +64,11 @@ class View {
     this._ctx.fillRect(...this.xywhToCvsXYWH(x, y, w, h))
   }
 
-  resize(w, h) {
-    this._w = this._cvs.width = w
-    this._h = this._cvs.height = h
+  resize(modelW, modelH, screenW, screenH) {
+    this._w = this._cvs.width = modelW * this.tileSheet.tileSize
+    this._h = this._cvs.height = modelH * this.tileSheet.tileSize
+    this._cvs.style.width = `${screenW}px`
+    this._cvs.style.height = `${screenH}px`
   }
 }
 

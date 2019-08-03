@@ -129,7 +129,7 @@ function handleResize() {
   } else {
     h = w / model.ratio
   }
-  view.resize(w, h)
+  view.resize(model.w, model.h, w, h)
 }
 
 function loadImage(url) {
