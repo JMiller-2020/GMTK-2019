@@ -13,13 +13,13 @@ class View {
     // Create new image
     let image = new Image(100, 100)
     image.src = "img/grass.png"
-    image.onload = function () {
+    image.onload = () => {
       Promise.all([
         createImageBitmap(image, 0, 0, 10, 10),
         createImageBitmap(image, 0, 12, 10, 10)
-      ]).then(function (sprites) {
+      ]).then((sprites) => {
         this._ctx.drawImage(sprites[0], 0, 0);
-        this._ctx.drawImage(sprites[1], 0, 0)
+        this._ctx.drawImage(sprites[1], 20, 0)
       })
     }
   }

@@ -9,7 +9,7 @@ const FRAME_LENGTH = 1000 / 60
 function main() {
   console.log('starting main.')
 
-  engine.start()
+  // engine.start()
 }
 
 function gameLoop(tickCount) {
