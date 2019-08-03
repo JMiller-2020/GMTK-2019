@@ -15,7 +15,11 @@ class World {
 
   tileAt(x, y) {
     return {
-      collide: !!this._tiles[y * this._columns + x]
+      solid: !!this._tiles[y * this._columns + x],
+      left: x,
+      right: x + 1,
+      top: y,
+      bottom: y + 1
     }
   }
 
