@@ -18,7 +18,7 @@ function gameLoop(tickCount) {
   tick()  // maybe use axes too?
 
   view.clear()
-  view.drawWorld(model.world.tiles, model.world.columns)
+  view.drawWorld(model.world.tiles, model.world.numColumns)
   view.drawPlayer(
     model.player.x,
     model.player.y,
@@ -136,13 +136,17 @@ async function init() {
   controller = new Controller()
   engine = new Engine(TICK_LENGTH, this.gameLoop)
 
+  await Promise.all([
+    fetch('tiles.json')
+        .then(json => json.json())
+        .then(tileDict => model.world.setTileDict(tileDict)),
+    fetch('levels/00.json')
+        .then(json => json.json())
+        .then(level => model.setup(level))
+  ])
+
   handleResize()
   addEventListener('resize', handleResize)
-
-  const tileDict = await fetch('tiles.json').then(json => json.json())
-  model.world.setTileDict(tileDict)
-  const level = await fetch('levels/00.json').then(json => json.json())
-  model.setup(level)
 
   view.setBounds(0, 0, model.w, model.h)
 
