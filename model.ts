@@ -1,7 +1,22 @@
 'use strict';
 
 class Model {
-  constructor(w, h) {
+  public world: World
+  
+  private w: number
+  private h: number
+  private gravity: number
+  private playerX: number
+  private playerY: number
+  private playerW: number
+  private playerH: number
+  private playerVX: number
+  private playerVY: number
+  private playerAcc: number
+  private playerMaxSpeed: number
+  private playerDrag: number
+
+  constructor(w: number, h: number) {
     this.w = w
     this.h = h
 

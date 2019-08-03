@@ -1,38 +1,49 @@
 'use strict';
 
 class Engine {
-  constructor(tickLength, updateFunc) {
-    this._tickLength = tickLength
-    this._updateFunc = updateFunc
+  private tickLength: number
+  private updateFunc
+  private _running: boolean
+  private accTime: number
+  private tickCount: number
+  private last: number
+  private animFrame: number
+  constructor(tickLength: number, updateFunc) {
+    this.tickLength = tickLength
+    this.updateFunc = updateFunc
     this._running = false
-    this._accTime = 0
-    this._tickCount = 0
-    this._last = 0
+    this.accTime = 0
+    this.tickCount = 0
+    this.last = 0
+  }
+
+  get running() {
+    return this._running
   }
 
   start() {
     this._running = true
-    this._animFrame = requestAnimationFrame(this._tick.bind(this))
+    this.animFrame = requestAnimationFrame(this._tick.bind(this))
   }
 
   stop() {
     this._running = false
-    cancelAnimationFrame(this._animFrame)
+    cancelAnimationFrame(this.animFrame)
   }
 
-  _tick(timestamp) {
-    this._animFrame = requestAnimationFrame(this._tick.bind(this))
-    const timeSince = timestamp - this._last
-    this._last = timestamp
-    this._accTime += timeSince
-    if (this._accTime > 10 * this._tickLength) {
-      console.log('lag', this._accTime)
-      this._accTime = this._tickLength
+  _tick(timestamp: number) {
+    this.animFrame = requestAnimationFrame(this._tick.bind(this))
+    const timeSince = timestamp - this.last
+    this.last = timestamp
+    this.accTime += timeSince
+    if (this.accTime > 10 * this.tickLength) {
+      console.log('lag', this.accTime)
+      this.accTime = this.tickLength
     }
-    while(this._accTime >= this._tickLength) {
-      this._updateFunc(this._tickCount)
-      this._tickCount++
-      this._accTime -= this._tickLength
+    while(this.accTime >= this.tickLength) {
+      this.updateFunc(this.tickCount)
+      this.tickCount++
+      this.accTime -= this.tickLength
     }
   }
 }
