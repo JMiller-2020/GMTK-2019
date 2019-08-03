@@ -43,9 +43,9 @@ class View {
     this._ctx.fillStyle = '#557555'
     const tw = 1
     const th = 1
-    for(let x = 0; x < columns; x++) {
-      for(let y = 0; y < tiles.length / columns; y++) {
-        if(tiles[y * columns + x]) {
+    for (let x = 0; x < columns; x++) {
+      for (let y = 0; y < tiles.length / columns; y++) {
+        if (tiles[y * columns + x]) {
           const cvsX = this.toCvsX(x)
           const cvsY = this.toCvsY(y)
           const cvsW = this.toCvsW(tw)
@@ -55,7 +55,7 @@ class View {
       }
     }
   }
-  
+
   drawPlayer(x, y, w, h) {
     this._ctx.fillStyle = '#af4f4f'
     const cvsX = this.toCvsX(x)
