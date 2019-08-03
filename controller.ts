@@ -1,12 +1,6 @@
 'use strict';
 
 class Controller {
-  private _mouseDown: boolean
-  private _up: boolean
-  private _down: boolean
-  private _left: boolean
-  private _right: boolean
-
   constructor() {
     this._mouseDown = false
     this._initController()

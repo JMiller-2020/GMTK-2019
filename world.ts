@@ -1,8 +1,6 @@
 'use strict';
 
 class World {
-  private _tiles: number[]
-  private _columns: number
   constructor() {
     
   }
@@ -17,7 +15,7 @@ class World {
 
   tileAt(x, y) {
     return {
-      collide: !!this._tiles[y * this.columns + x]
+      collide: !!this._tiles[y * this._w + x]
     }
   }
 

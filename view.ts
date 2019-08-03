@@ -1,56 +1,46 @@
 'use strict';
 
 class View {
-  public background
-
-  private cvs
-  private ctx
-  private w: number
-  private h: number
-  private left: number
-  private top: number
-  private right: number
-  private bottom: number
   constructor(canvas) {
-    this.cvs = canvas
+    this._cvs = canvas
     this._initView()
     this.background = '#000000'
   }
 
   _initView() {
-    this.ctx = this.cvs.getContext('2d')
+    this._ctx = this._cvs.getContext('2d')
   }
 
-  setBounds(left, top, right, bottom) {
-    this.left = left
-    this.top = top
-    this.right = right
-    this.bottom = bottom
+  setBounds(x1, y1, x2, y2) {
+    this._x1 = x1
+    this._y1 = y1
+    this._x2 = x2
+    this._y2 = y2
   }
 
   toCvsX(x) {
-    return this.toCvsW(x - this.left)
+    return this.toCvsW(x - this._x1)
   }
 
   toCvsY(y) {
-    return this.toCvsH(y - this.top)
+    return this.toCvsH(y - this._y1)
   }
 
   toCvsW(w) {
-    return Math.round(w / (this.right - this.left) * this.w)
+    return Math.round(w / (this._x2 - this._x1) * this._w)
   }
 
   toCvsH(h) {
-    return Math.round(h / (this.bottom - this.top) * this.h)
+    return Math.round(h / (this._y2 - this._y1) * this._h)
   }
 
   clear() {
-    this.ctx.fillStyle = this.background
-    this.ctx.fillRect(0, 0, this.w, this.h)
+    this._ctx.fillStyle = this.background
+    this._ctx.fillRect(0, 0, this._w, this._h)
   }
 
   drawWorld(tiles, columns) {
-    this.ctx.fillStyle = '#557555'
+    this._ctx.fillStyle = '#557555'
     const tw = 1
     const th = 1
     for(let x = 0; x < columns; x++) {
@@ -60,23 +50,23 @@ class View {
           const cvsY = this.toCvsY(y)
           const cvsW = this.toCvsW(tw)
           const cvsH = this.toCvsH(th)
-          this.ctx.fillRect(cvsX, cvsY, cvsW, cvsH)
+          this._ctx.fillRect(cvsX, cvsY, cvsW, cvsH)
         }
       }
     }
   }
   
   drawPlayer(x, y, w, h) {
-    this.ctx.fillStyle = '#af4f4f'
+    this._ctx.fillStyle = '#af4f4f'
     const cvsX = this.toCvsX(x)
     const cvsY = this.toCvsY(y)
     const cvsW = this.toCvsW(w)
     const cvsH = this.toCvsH(h)
-    this.ctx.fillRect(cvsX, cvsY, cvsW, cvsH)
+    this._ctx.fillRect(cvsX, cvsY, cvsW, cvsH)
   }
 
   resize(w, h) {
-    this.w = this.cvs.width = w
-    this.h = this.cvs.height = h
+    this._w = this._cvs.width = w
+    this._h = this._cvs.height = h
   }
 }
