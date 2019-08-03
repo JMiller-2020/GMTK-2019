@@ -20,6 +20,8 @@ class Model {
   setup(level) {
     this.world.setup(level)
     console.log('setup level')
+    this.w = this.world.numColumns
+    this.h = this.world.numRows
   }
 }
 

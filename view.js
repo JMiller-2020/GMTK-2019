@@ -52,13 +52,13 @@ class View {
     this._ctx.fillRect(0, 0, this._w, this._h)
   }
 
-  drawWorld(tiles, columns) {
+  drawWorld(tiles, c) {
     this._ctx.fillStyle = '#557555'
     const tw = 1
     const th = 1
-    for (let x = 0; x < columns; x++) {
-      for (let y = 0; y < tiles.length / columns; y++) {
-        if (tiles[y * columns + x]) {
+    for (let x = 0; x < c; x++) {
+      for (let y = 0; y < tiles.length / c; y++) {
+        if (tiles[y * c + x]) {
           const cvsX = this.toCvsX(x)
           const cvsY = this.toCvsY(y)
           const cvsW = this.toCvsW(tw)
