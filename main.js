@@ -3,18 +3,10 @@
 var model, view, controller, engine;
 var canvas;
 
-function _main() {
+const TICK_LENGTH = 60
 
-}
-
-function _init() {
-  console.log('initialized.')
-
-  canvas = document.getElementById('game-canvas')
-
-  model      = new Model()
-  view       = new View(canvas)
-  controller = new Controller()
+function main() {
+  console.log('starting main.')
 
   // Model test
   console.log(model.value)
@@ -28,6 +20,29 @@ function _init() {
   setTimeout(() => {
     console.log(controller.isMouseDown)
   }, 1000)
+
+  // Engine test
+  engine.start()
+  setTimeout(() => {
+    engine.stop()
+  }, 100)
 }
 
-window.onload = _init
+function updateFunc(tickCount) {
+  console.log('update:', tickCount)
+}
+
+function init() {
+
+  canvas = document.getElementById('game-canvas')
+
+  model      = new Model()
+  view       = new View(canvas)
+  controller = new Controller()
+  engine     = new Engine(TICK_LENGTH, this.updateFunc)
+
+  console.log('initialized.')
+  main()
+}
+
+window.onload = init
