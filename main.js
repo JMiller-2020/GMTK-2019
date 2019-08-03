@@ -28,7 +28,7 @@ function main() {
   }, 100)
 }
 
-function updateFunc(tickCount) {
+function gameLoop(tickCount) {
   console.log('update:', tickCount)
 }
 
@@ -39,7 +39,7 @@ function init() {
   model      = new Model()
   view       = new View(canvas)
   controller = new Controller()
-  engine     = new Engine(TICK_LENGTH, this.updateFunc)
+  engine     = new Engine(TICK_LENGTH, this.gameLoop)
 
   console.log('initialized.')
   main()

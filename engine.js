@@ -25,7 +25,11 @@ class Engine {
     this._last = timestamp
     this._animFrame = requestAnimationFrame(this._tick.bind(this))
     this._accTime += timeSince
-    while(this._accTime > this._tickLength) {
+    if (this._accTime > 10 * this._tickLength) {
+      console.log('lag', this._accTime)
+      this._accTime = this._tickLength
+    }
+    while(this._accTime >= this._tickLength) {
       this._updateFunc(this._tickCount)
       this._tickCount++
       this._accTime -= this._tickLength
