@@ -38,6 +38,25 @@ class View {
     this._ctx.fillStyle = this.background
     this._ctx.fillRect(0, 0, this._w, this._h)
   }
+
+  drawLevel(tiles, w) {
+    console.log(tiles, w)
+    this._ctx.fillStyle = '#557555'
+    const tw = 1
+    const th = 1
+    for(let x = 0; x < w; x++) {
+      for(let y = 0; y < tiles.length / w; y++) {
+        if(tiles[y * w + x]) {
+          console.log(x, y, tw, th)
+          const cvsX = this.toCvsX(x)
+          const cvsY = this.toCvsY(y)
+          const cvsW = this.toCvsW(tw)
+          const cvsH = this.toCvsH(th)
+          this._ctx.fillRect(cvsX, cvsY, cvsW, cvsH)
+        }
+      }
+    }
+  }
   
   drawPlayer(x, y, w, h) {
     this._ctx.fillStyle = '#af4f4f'

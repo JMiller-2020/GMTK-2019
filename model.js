@@ -9,13 +9,15 @@ class Model {
 
     this.playerX = 2
     this.playerY = 2
-    this.playerW = 2
-    this.playerH = 3
+    this.playerW = 1
+    this.playerH = 1
     this.playerVX = 0
     this.playerVY = 0
     this.playerAcc = 0.5
     this.playerMaxSpeed = 1.6
     this.playerDrag = 0.2
+
+    this.level = new Level()
   }
 
   get ratio() {

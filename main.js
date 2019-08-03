@@ -13,9 +13,12 @@ function main() {
 }
 
 function gameLoop(tickCount) {
+  // console.log(tickCount)
+
   model.tick(controller.buttonMap)  // maybe use axes too?
   
   view.clear()
+  view.drawLevel(model.level.tiles, model.level.width)
   view.drawPlayer(
     model.playerX,
     model.playerY,
@@ -39,13 +42,15 @@ function init() {
 
   canvas = document.getElementById('game-canvas')
 
-  model      = new Model(60, 40)
+  model      = new Model(18, 12)
   view       = new View(canvas)
   controller = new Controller()
   engine     = new Engine(TICK_LENGTH, this.gameLoop)
 
   handleResize()
   addEventListener('resize', handleResize)
+
+  model.level.load(0)
 
   view.setBounds(0, 0, model.w, model.h)
 
