@@ -9,7 +9,7 @@ const FRAME_LENGTH = 1000 / 60
 function main() {
   console.log('starting main.')
 
-  // engine.start()
+  engine.start()
 }
 
 function gameLoop(tickCount) {
@@ -127,7 +127,7 @@ function handleResize() {
   view.resize(w, h)
 }
 
-function init() {
+async function init() {
 
   canvas = document.getElementById('game-canvas')
 
@@ -139,7 +139,10 @@ function init() {
   handleResize()
   addEventListener('resize', handleResize)
 
-  model.world.load(0)
+  const tileDict = await fetch('tiles.json').then(json => json.json())
+  model.world.setTileDict(tileDict)
+  const level = await fetch('levels/00.json').then(json => json.json())
+  model.setup(level)
 
   view.setBounds(0, 0, model.w, model.h)
 

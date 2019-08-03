@@ -16,6 +16,11 @@ class Model {
   get ratio() {
     return this.w / this.h
   }
+
+  setup(level) {
+    this.world.setup(level)
+    console.log('setup level')
+  }
 }
 
 class Player {
