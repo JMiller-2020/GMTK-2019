@@ -27,33 +27,21 @@ class View {
         `(${this.tileSheet.numColumns}x${this.tileSheet.numRows})`)
   }
 
-  indexToCvsXYWH(idx, c) {
-    const x = idx % c
-    const y = Math.floor(idx / c)
-    const w = this._r - this._l
-    const h = this._b - this._t
+  xywhToCvsXYWH(x, y, w, h) {
+    const mw = this._r - this._l
+    const mh = this._b - this._t
     return [
-      (x - this._l) / w * this._w,
-      (y - this._t) / h * this._h,
-      this._w / w,
-      this._h / h
+      (x - this._l) / mw * this._w,
+      (y - this._t) / mh * this._h,
+      w / mw * this._w,
+      h / mh * this._h
     ]
   }
 
-  toCvsX(x) {
-    return this.toCvsW(x - this._l)
-  }
-
-  toCvsY(y) {
-    return this.toCvsH(y - this._t)
-  }
-
-  toCvsW(w) {
-    return Math.round(w / (this._r - this._l) * this._w)
-  }
-
-  toCvsH(h) {
-    return Math.round(h / (this._b - this._t) * this._h)
+  indexToCvsXYWH(idx, c) {
+    const x = idx % c
+    const y = Math.floor(idx / c)
+    return this.xywhToCvsXYWH(x, y, 1, 1)
   }
 
   clear() {
@@ -61,23 +49,19 @@ class View {
     this._ctx.fillRect(0, 0, this._w, this._h)
   }
 
-  drawWorld(tiles, c) {
+  drawWorld(texIdxs, c) {
     this._ctx.fillStyle = '#557555'
-    for (let i = 0; i < tiles.length; i++) {
-      const textureIdx = tiles[i]
+    for (let i = 0; i < texIdxs.length; i++) {
+      const texIdx = texIdxs[i]
       this._ctx.drawImage(this.tileSheet.img,
-          ...this.tileSheet.indexToXYWH(textureIdx),
+          ...this.tileSheet.indexToXYWH(texIdx),
           ...this.indexToCvsXYWH(i, c))
     }
   }
 
   drawPlayer(x, y, w, h) {
     this._ctx.fillStyle = '#af4f4f'
-    const cvsX = this.toCvsX(x)
-    const cvsY = this.toCvsY(y)
-    const cvsW = this.toCvsW(w)
-    const cvsH = this.toCvsH(h)
-    this._ctx.fillRect(cvsX, cvsY, cvsW, cvsH)
+    this._ctx.fillRect(...this.xywhToCvsXYWH(x, y, w, h))
   }
 
   resize(w, h) {

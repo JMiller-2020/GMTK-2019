@@ -12,7 +12,7 @@ function main() {
   engine.start()
 
   // for debugging
-  
+
   // setTimeout(() => {
   //   engine.stop()
   // }, 10000);
@@ -24,7 +24,7 @@ function gameLoop(tickCount) {
   tick()  // maybe use axes too?
 
   view.clear()
-  view.drawWorld(model.world.tiles, model.world.numColumns)
+  view.drawWorld(model.world.textures, model.world.numColumns)
   view.drawPlayer(
     model.player.x,
     model.player.y,
@@ -82,27 +82,26 @@ function tick() {
   player.y += vy
 
   // world collisions
-  // TODO make tiles only collide with certain faces
   for (let i = 0; i < player._collisionPoints.length; i++) {
     let point = player.collisionPoint(i)
     const loc = point.map(Math.floor)
     const tile = model.world.tileAt(...loc)
-    if (tile.solid &&
-      player.y + player.h > tile.top &&
-      player.y < tile.bottom &&
-      player.x + player.w > tile.left &&
-      player.x < tile.right) {
-      if (vy > 0 && player.ly + player.h <= tile.top) {
+    if (tile.collisionMask &&
+        player.y + player.h > tile.top &&
+        player.y < tile.bottom &&
+        player.x + player.w > tile.left &&
+        player.x < tile.right) {
+      if ((tile.collisionMask & 0b0001) && vy > 0 && player.ly + player.h <= tile.top) {
         player.y = tile.top - player.h
       }
-      if (vy < 0 && player.ly >= tile.bottom) {
+      if ((tile.collisionMask & 0b0010) && vx < 0 && player.lx >= tile.right) {
+        player.x = tile.right
+      }
+      if ((tile.collisionMask & 0b0100) && vy < 0 && player.ly >= tile.bottom) {
         player.y = tile.bottom
       }
-      if (vx > 0 && player.lx + player.w <= tile.left) {
+      if ((tile.collisionMask & 0b1000) && vx > 0 && player.lx + player.w <= tile.left) {
         player.x = tile.left - player.w
-      }
-      if (vx < 0 && player.lx >= tile.right) {
-        player.x = tile.right
       }
     }
   }
@@ -153,9 +152,6 @@ async function init() {
 
   // retrieve resources
   await Promise.all([
-    fetch('tiles.json')
-        .then(json => json.json())
-        .then(tileDict => model.world.setTileDict(tileDict)),
     fetch('levels/00.json')
         .then(json => json.json())
         .then(level => model.setup(level)),
