@@ -10,6 +10,20 @@ class View {
 
   _initView() {
     this._ctx = this._cvs.getContext('2d')
+    // Create new image
+    let image = new Image(100, 100)
+    // Spritesheet source
+    image.src = "img/grass.png"
+    // When image loads, create bitmaps and draw to canvas
+    image.onload = () => {
+      Promise.all([
+        createImageBitmap(image, 0, 0, 10, 10),
+        createImageBitmap(image, 0, 12, 10, 10)
+      ]).then((sprites) => {
+        this._ctx.drawImage(sprites[0], 0, 0);
+        this._ctx.drawImage(sprites[1], 20, 0)
+      })
+    }
   }
 
   setBounds(x1, y1, x2, y2) {
@@ -41,26 +55,12 @@ class View {
   }
 
   drawWorld(tiles, columns) {
-    // this._ctx.fillStyle = '#557555'
+    this._ctx.fillStyle = '#557555'
     const tw = 1
     const th = 1
     for (let x = 0; x < columns; x++) {
       for (let y = 0; y < tiles.length / columns; y++) {
-        // if (tiles[y * columns + x]) {
-
-        // Create new image
-        let image = new Image(100, 100)
-        // Spritesheet source
-        image.src = "img/grass.png"
-        // When image loads, create bitmaps and draw to canvas
-        image.onload = () => {
-          // Promise.all([
-          //   createImageBitmap(image, x, y, 10, 10),
-          //   createImageBitmap(image, x, y, 10, 10)
-          // ]).then((sprites) => {
-          //   this._ctx.drawImage(sprites[0], 0, 0);
-          //   this._ctx.drawImage(sprites[1], 20, 0)
-          // })
+        if (tiles[y * columns + x]) {
           const cvsX = this.toCvsX(x)
           const cvsY = this.toCvsY(y)
           const cvsW = this.toCvsW(tw)
@@ -85,3 +85,5 @@ class View {
     this._h = this._cvs.height = h
   }
 }
+
+
