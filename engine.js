@@ -11,7 +11,6 @@ class Engine {
 
   start() {
     this._running = true
-    this._last
     this._animFrame = requestAnimationFrame(this._tick.bind(this))
   }
 
@@ -27,6 +26,6 @@ class Engine {
       this._tickCount++
       this._accTime -= this._tickLength
     }
-    this._animFrame = requestAnimationFrame(this._tick.bind(this), this._tickLength)
+    this._animFrame = requestAnimationFrame(this._tick.bind(this))
   }
 }
