@@ -10,6 +10,12 @@ function main() {
   console.log('starting main.')
 
   engine.start()
+
+  // for debugging
+  
+  // setTimeout(() => {
+  //   engine.stop()
+  // }, 10000);
 }
 
 function gameLoop(tickCount) {
@@ -153,8 +159,8 @@ async function init() {
     fetch('levels/00.json')
         .then(json => json.json())
         .then(level => model.setup(level)),
-    loadImage('img/grass.png')
-        .then(tileSheet => view.setTileSheet(tileSheet))
+    loadImage('img/spritesheet-0.0.1.png')
+        .then(tileSheet => view.setTileSheet(tileSheet, 16))
   ])
 
   handleResize()
