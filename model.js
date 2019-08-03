@@ -24,8 +24,8 @@ class Player {
     this.y = y
     this.w = w
     this.h = h
-    this.vx = 0
-    this.vy = 0
+    this.lx = x
+    this.ly = y
     this.acc = 0.02
     this.drag = 0.01
     this._collisionPoints = this.generateCollisionPoints()

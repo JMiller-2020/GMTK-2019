@@ -29,6 +29,9 @@ function gameLoop(tickCount) {
 
 function tick() {
   const buttonMap = controller.buttonMap
+  const player = model.player
+  let vx = player.x - player.lx
+  let vy = player.y - player.ly
   let vector = [0, 0]
   if('up' in buttonMap && buttonMap['up']) {
     vector[1] -= 1
@@ -44,58 +47,72 @@ function tick() {
   }
   const unlimitedAcc = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1])
   if(unlimitedAcc != 0) {
-    model.player.vx += vector[0] / unlimitedAcc * model.player.acc
-    model.player.vy += vector[1] / unlimitedAcc * model.player.acc
+    vx += vector[0] / unlimitedAcc * player.acc
+    vy += vector[1] / unlimitedAcc * player.acc
   }
   if('jump' in buttonMap && buttonMap['jump']) {
     // TODO
   }
 
-  const unlimitedSpeed = Math.sqrt(model.player.vx * model.player.vx + model.player.vy * model.player.vy)
+  const unlimitedSpeed = Math.sqrt(vx * vx + vy * vy)
   if(unlimitedSpeed != 0) {
-    let speed = unlimitedSpeed - model.player.drag
+    let speed = unlimitedSpeed - player.drag
     if(speed < 0) {
       speed = 0
-    } else if(speed > model.player.MaxSpeed) {
-      speed = model.player.MaxSpeed
+    } else if(speed > player.MaxSpeed) {
+      speed = player.MaxSpeed
     }
-    model.player.vx = speed * model.player.vx / unlimitedSpeed
-    model.player.vy = speed * model.player.vy / unlimitedSpeed
+    vx = speed * vx / unlimitedSpeed
+    vy = speed * vy / unlimitedSpeed
   }
 
   // add gravity after limiting speed
   // and jump? Not quite enjoyable yet.
-  // model.player.vy += model.gravity
+  // vy += model.gravity
 
-  model.player.x += model.player.vx
-  model.player.y += model.player.vy
+  player.lx = player.x
+  player.ly = player.y
+  player.x += vx
+  player.y += vy
 
   // world collisions
-  for(let i = 0; i < model.player._collisionPoints.length; i++) {
-    const point = model.player.collisionPoint(i)
+  // TODO make tiles only collide with certain faces
+  for(let i = 0; i <  player._collisionPoints.length; i++) {
+    let point = player.collisionPoint(i)
     const loc = point.map(Math.floor)
-    // console.log(model.world.tileAt(...loc))
-    if(model.world.tileAt(...loc).collide) {
-      console.log('collide', loc)
+    const tile = model.world.tileAt(...loc)
+    if(tile.solid &&
+        player.y + player.h > tile.top &&
+        player.y            < tile.bottom &&
+        player.x + player.w > tile.left &&
+        player.x            < tile.right) {
+      if(vy > 0 && player.ly + player.h <= tile.top) {
+        player.y = tile.top - player.h
+      }
+      if(vy < 0 && player.ly >= tile.bottom) {
+        player.y = tile.bottom
+      }
+      if(vx > 0 && player.lx + player.w <= tile.left) {
+        player.x = tile.left - player.w
+      }
+      if(vx < 0 && player.lx >= tile.right) {
+        player.x = tile.right
+      }
     }
   }
 
   // window collisions
-  if(model.player.x < 0) {
-    model.player.x = 0
-    model.player.vx = Math.max(model.player.vx, 0)
+  if(player.x < 0) {
+    player.x = 0
   }
-  if(model.player.x + model.player.w > model.w) {
-    model.player.x = model.w - model.player.w
-    model.player.vx = Math.min(model.player.vx, 0)
+  if(player.x + player.w > model.w) {
+    player.x = model.w - player.w
   }
-  if(model.player.y < 0) {
-    model.player.y = 0
-    model.player.vy = Math.max(model.player.vy, 0)
+  if(player.y < 0) {
+    player.y = 0
   }
-  if(model.player.y + model.player.h > model.h) {
-    model.player.y = model.h - model.player.h
-    model.player.vy = Math.min(model.player.vy, 0)
+  if(player.y + player.h > model.h) {
+    player.y = model.h - player.h
   }
 }
 
