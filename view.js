@@ -8,11 +8,16 @@ class View {
 
   _initView() {
     this._ctx = this._cvs.getContext('2d')
-    this._w = this._cvs.width
-    this._h = this._cvs.height
+    this._handleResize()
+    addEventListener('resize', this._handleResize.bind(this))
   }
 
   render() {
     this._ctx.fillRect(10, 10, this._w - 20, this._h - 20)
+  }
+
+  _handleResize() {
+    this._w = this._cvs.width = window.innerWidth
+    this._h = this._cvs.height = window.innerHeight
   }
 }
