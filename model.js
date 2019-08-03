@@ -6,16 +6,9 @@ class Model {
     this.h = h
 
     this.gravity = 0.4
+    this.maxSpeed = 0.2
 
-    this.playerX = 2
-    this.playerY = 2
-    this.playerW = 0.8
-    this.playerH = 0.8
-    this.playerVX = 0
-    this.playerVY = 0
-    this.playerAcc = 0.02
-    this.playerMaxSpeed = 0.2
-    this.playerDrag = 0.01
+    this.player = new Player(2, 2, 0.8, 0.8)
 
     this.world = new World()
   }
@@ -23,59 +16,31 @@ class Model {
   get ratio() {
     return this.w / this.h
   }
+}
 
-  tick(buttonMap) {
-    if('up' in buttonMap && buttonMap['up']) {
-      this.playerVY -= this.playerAcc
-    }
-    if('down' in buttonMap && buttonMap['down']) {
-      this.playerVY += this.playerAcc
-    }
-    if('left' in buttonMap && buttonMap['left']) {
-      this.playerVX -= this.playerAcc
-    }
-    if('right' in buttonMap && buttonMap['right']) {
-      this.playerVX += this.playerAcc
-    }
-    if('jump' in buttonMap && buttonMap['jump']) {
-      // TODO
-    }
+class Player {
+  constructor(x, y, w, h) {
+    this.x = x
+    this.y = y
+    this.w = w
+    this.h = h
+    this.vx = 0
+    this.vy = 0
+    this.acc = 0.02
+    this.drag = 0.01
+  }
 
-    const unlimitedSpeed = Math.sqrt(this.playerVX * this.playerVX + this.playerVY * this.playerVY)
-    if(unlimitedSpeed != 0) {
-      let speed = unlimitedSpeed - this.playerDrag
-      if(speed < 0) {
-        speed = 0
-      } else if(speed > this.playerMaxSpeed) {
-        speed = this.playerMaxSpeed
-      }
-      this.playerVX = speed * this.playerVX / unlimitedSpeed
-      this.playerVY = speed * this.playerVY / unlimitedSpeed
+  collisionPoints() {
+    const array = []
+    for(let i = 0; i < this.w; i++) {
+      array.push([this.x + i, this.y         ])  // along the top
+      array.push([this.x + i, this.y + this.h])  // along the bottom
     }
-
-    // add gravity after limiting speed
-    // and jump? Not quite enjoyable yet.
-    // this.playerVY += this.gravity
-
-    this.playerX += this.playerVX
-    this.playerY += this.playerVY
-
-    // window collisions
-    if(this.playerX < 0) {
-      this.playerX = 0
-      this.playerVX = Math.max(this.playerVX, 0)
+    for(let j = 0; j < this.h; j++) {
+      array.push([this.x,          this.y + j])  // along the left
+      array.push([this.x + this.w, this.y + j])  // along the right
     }
-    if(this.playerX + this.playerW > this.w) {
-      this.playerX = this.w - this.playerW
-      this.playerVX = Math.min(this.playerVX, 0)
-    }
-    if(this.playerY < 0) {
-      this.playerY = 0
-      this.playerVY = Math.max(this.playerVY, 0)
-    }
-    if(this.playerY + this.playerH > this.h) {
-      this.playerY = this.h - this.playerH
-      this.playerVY = Math.min(this.playerVY, 0)
-    }
+    array.push([this.x + this.w, this.y + this.h])  // bottom right corner, jic
+    return array
   }
 }
