@@ -1,14 +1,27 @@
 'use strict';
 
+
 class View {
   constructor(canvas) {
     this._cvs = canvas
     this._initView()
-    this.background = '#000000'
+    this.background = "#000000"
   }
 
   _initView() {
     this._ctx = this._cvs.getContext('2d')
+    // Create new image
+    let image = new Image(100, 100)
+    image.src = "img/grass.png"
+    image.onload = function () {
+      Promise.all([
+        createImageBitmap(image, 0, 0, 10, 10),
+        createImageBitmap(image, 0, 12, 10, 10)
+      ]).then(function (sprites) {
+        this._ctx.drawImage(sprites[0], 0, 0);
+        this._ctx.drawImage(sprites[1], 0, 0)
+      })
+    }
   }
 
   setBounds(x1, y1, x2, y2) {
@@ -70,3 +83,5 @@ class View {
     this._h = this._cvs.height = h
   }
 }
+
+
