@@ -19,7 +19,7 @@ class View {
   }
 
   toCvsX(x) {
-    return this.toCvsW(x - this._x1) 
+    return this.toCvsW(x - this._x1)
   }
 
   toCvsY(y) {
@@ -27,11 +27,11 @@ class View {
   }
 
   toCvsW(w) {
-    return w / (this._x2 - this._x1) * this._w
+    return Math.round(w / (this._x2 - this._x1) * this._w)
   }
 
   toCvsH(h) {
-    return h / (this._y2 - this._y1) * this._h
+    return Math.round(h / (this._y2 - this._y1) * this._h)
   }
 
   clear() {
@@ -39,15 +39,13 @@ class View {
     this._ctx.fillRect(0, 0, this._w, this._h)
   }
 
-  drawLevel(tiles, w) {
-    console.log(tiles, w)
+  drawWorld(tiles, columns) {
     this._ctx.fillStyle = '#557555'
     const tw = 1
     const th = 1
-    for(let x = 0; x < w; x++) {
-      for(let y = 0; y < tiles.length / w; y++) {
-        if(tiles[y * w + x]) {
-          console.log(x, y, tw, th)
+    for(let x = 0; x < columns; x++) {
+      for(let y = 0; y < tiles.length / columns; y++) {
+        if(tiles[y * columns + x]) {
           const cvsX = this.toCvsX(x)
           const cvsY = this.toCvsY(y)
           const cvsW = this.toCvsW(tw)

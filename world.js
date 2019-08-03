@@ -1,6 +1,6 @@
 'use strict';
 
-class Level {
+class World {
   constructor() {
     
   }
@@ -9,8 +9,14 @@ class Level {
     return this._tiles
   }
 
-  get width() {
-    return this._w
+  get columns() {
+    return this._columns
+  }
+
+  tileAt(x, y) {
+    return {
+      collide: !!this._tiles[y * this._w + x]
+    }
   }
 
   load(id) {
@@ -28,6 +34,6 @@ class Level {
       1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1,
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     ]
-    this._w = 18
+    this._columns = 18
   }
 }

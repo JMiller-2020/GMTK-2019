@@ -9,15 +9,15 @@ class Model {
 
     this.playerX = 2
     this.playerY = 2
-    this.playerW = 1
-    this.playerH = 1
+    this.playerW = 0.8
+    this.playerH = 0.8
     this.playerVX = 0
     this.playerVY = 0
-    this.playerAcc = 0.5
-    this.playerMaxSpeed = 1.6
-    this.playerDrag = 0.2
+    this.playerAcc = 0.02
+    this.playerMaxSpeed = 0.2
+    this.playerDrag = 0.01
 
-    this.level = new Level()
+    this.world = new World()
   }
 
   get ratio() {
@@ -60,6 +60,7 @@ class Model {
     this.playerX += this.playerVX
     this.playerY += this.playerVY
 
+    // window collisions
     if(this.playerX < 0) {
       this.playerX = 0
       this.playerVX = Math.max(this.playerVX, 0)

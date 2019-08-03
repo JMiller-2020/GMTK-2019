@@ -18,7 +18,7 @@ function gameLoop(tickCount) {
   model.tick(controller.buttonMap)  // maybe use axes too?
   
   view.clear()
-  view.drawLevel(model.level.tiles, model.level.width)
+  view.drawWorld(model.world.tiles, model.world.columns)
   view.drawPlayer(
     model.playerX,
     model.playerY,
@@ -50,7 +50,7 @@ function init() {
   handleResize()
   addEventListener('resize', handleResize)
 
-  model.level.load(0)
+  model.world.load(0)
 
   view.setBounds(0, 0, model.w, model.h)
 
