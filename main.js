@@ -1,7 +1,7 @@
 'use strict';
 
 var model, view, controller, engine
-var canvas
+var canvas, playerSpriteSheet
 
 const TICK_LENGTH = 1000 / 60
 const FRAME_LENGTH = 1000 / 60
@@ -26,10 +26,12 @@ function gameLoop(tickCount) {
   view.clear()
   view.drawWorld(model.world.textures, model.world.numColumns)
   view.drawPlayer(
-    model.player.x,
-    model.player.y,
-    model.player.w,
-    model.player.h
+    model.player.x - 0.1,
+    model.player.y - 0.1,
+    1,
+    1,
+    playerSpriteSheet,
+    tickCount
   )
 }
 
@@ -133,7 +135,7 @@ function handleResize() {
 }
 
 function loadImage(url) {
-  return new Promise((res, rej) => {
+  return new Promise((res) => {
     const img = new Image()
     img.onload = () => res(img)
     img.onerror = () => new Error(`Failed to load image at: ${url}`)
@@ -155,8 +157,10 @@ async function init() {
     fetch('levels/00.json')
         .then(json => json.json())
         .then(level => model.setup(level)),
-    loadImage('img/spritesheet-0.0.1.png')
-        .then(tileSheet => view.setTileSheet(tileSheet, 16))
+    loadImage('img/tilesheet-0.0.1.png')
+        .then(tileSheet => view.setTileSheet(tileSheet, 16)),
+    loadImage('img/player-0.0.1.png')
+        .then(img => playerSpriteSheet = new SpriteSheet(img, 16))
   ])
 
   handleResize()
