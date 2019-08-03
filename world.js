@@ -2,7 +2,7 @@
 
 class World {
   constructor() {
-    
+
   }
 
   get tiles() {
