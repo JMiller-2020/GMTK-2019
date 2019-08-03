@@ -3,7 +3,7 @@
 var model, view, controller, engine;
 var canvas;
 
-const TICK_LENGTH = 60
+const TICK_LENGTH = 1000 / 60
 
 function main() {
   console.log('starting main.')
