@@ -127,6 +127,15 @@ function handleResize() {
   view.resize(w, h)
 }
 
+function loadImage(url) {
+  return new Promise((res, rej) => {
+    const img = new Image()
+    img.onload = () => res(img)
+    img.onerror = () => new Error(`Failed to load image at: ${url}`)
+    img.src = url
+  })
+}
+
 async function init() {
 
   canvas = document.getElementById('game-canvas')
@@ -136,13 +145,16 @@ async function init() {
   controller = new Controller()
   engine     = new Engine(TICK_LENGTH, this.gameLoop)
 
+  // retrieve resources
   await Promise.all([
     fetch('tiles.json')
         .then(json => json.json())
         .then(tileDict => model.world.setTileDict(tileDict)),
     fetch('levels/00.json')
         .then(json => json.json())
-        .then(level => model.setup(level))
+        .then(level => model.setup(level)),
+    loadImage('img/grass.png')
+        .then(tileSheet => view.setTileSheet(tileSheet))
   ])
 
   handleResize()

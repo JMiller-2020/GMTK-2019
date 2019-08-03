@@ -9,7 +9,7 @@ class World {
     this._tiles = level.tiles
     this._columns = level.numColumns
     if(this.numTiles % this.numColumns != 0) {
-      console.log(`corrupt level: ${this.numTiles} / ${this.numColumns} != 0`)
+      console.log(`bad level shape: ${this.numTiles} % ${this.numColumns} != 0`)
     }
   }
 
