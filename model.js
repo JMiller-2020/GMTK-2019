@@ -5,7 +5,7 @@ class Model {
     this.w = w
     this.h = h
 
-    this.gravity = .4
+    this.gravity = 0.4
 
     this.playerX = 2
     this.playerY = 2
@@ -13,14 +13,47 @@ class Model {
     this.playerH = 3
     this.playerVX = 0
     this.playerVY = 0
+    this.playerAcc = 0.5
+    this.playerMaxSpeed = 1.6
+    this.playerDrag = 0.2
   }
 
   get ratio() {
     return this.w / this.h
   }
 
-  tick() {
-    this.playerVY += this.gravity
+  tick(buttonMap) {
+    if('up' in buttonMap && buttonMap['up']) {
+      this.playerVY -= this.playerAcc
+    }
+    if('down' in buttonMap && buttonMap['down']) {
+      this.playerVY += this.playerAcc
+    }
+    if('left' in buttonMap && buttonMap['left']) {
+      this.playerVX -= this.playerAcc
+    }
+    if('right' in buttonMap && buttonMap['right']) {
+      this.playerVX += this.playerAcc
+    }
+    if('jump' in buttonMap && buttonMap['jump']) {
+      // TODO
+    }
+
+    const unlimitedSpeed = Math.sqrt(this.playerVX * this.playerVX + this.playerVY * this.playerVY)
+    if(unlimitedSpeed != 0) {
+      let speed = unlimitedSpeed - this.playerDrag
+      if(speed < 0) {
+        speed = 0
+      } else if(speed > this.playerMaxSpeed) {
+        speed = this.playerMaxSpeed
+      }
+      this.playerVX = speed * this.playerVX / unlimitedSpeed
+      this.playerVY = speed * this.playerVY / unlimitedSpeed
+    }
+
+    // add gravity after limiting speed
+    // and jump? Not quite enjoyable yet.
+    // this.playerVY += this.gravity
 
     this.playerX += this.playerVX
     this.playerY += this.playerVY

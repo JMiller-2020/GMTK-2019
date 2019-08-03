@@ -10,13 +10,10 @@ function main() {
   console.log('starting main.')
 
   engine.start()
-  setTimeout(() => {
-    engine.stop()
-  }, 10000)
 }
 
 function gameLoop(tickCount) {
-  model.tick()
+  model.tick(controller.buttonMap)  // maybe use axes too?
   
   view.clear()
   view.drawPlayer(
@@ -30,8 +27,7 @@ function gameLoop(tickCount) {
 function handleResize() {
   let w = window.innerWidth
   let h = window.innerHeight
-  const screenRatio = w / h
-  if(w/h > model.ratio) {
+  if(w / h > model.ratio) {
     w = h * model.ratio
   } else {
     h = w / model.ratio
@@ -51,7 +47,6 @@ function init() {
   handleResize()
   addEventListener('resize', handleResize)
 
-  // view.setBounds(0, 0, model.w, model.h)
   view.setBounds(0, 0, model.w, model.h)
 
   console.log('initialized.')
