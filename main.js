@@ -195,9 +195,9 @@ async function init() {
     fetch('levels/00.json')
         .then(json => json.json())
         .then(level => model.setup(level)),
-    loadImage('img/tilesheet-0.0.2.png')
+    loadImage('img/tilesheet-0.0.4.png')
         .then(tileSheet => view.setTileSheet(tileSheet, 16)),
-    loadImage('img/player-0.0.1.png')
+    loadImage('img/player-0.0.3.png')
         .then(img => playerSpriteSheet = new SpriteSheet(img, 16))
   ])
 
