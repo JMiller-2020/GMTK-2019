@@ -8,38 +8,43 @@ class World {
   setup(level) {
     this._tiles = level.tiles
     this._columns = level.numColumns
-    if(this.numTiles % this.numColumns != 0) {
+    if (this.numTiles % this.numColumns != 0) {
       console.log(`bad level shape: ${this.numTiles} % ${this.numColumns} != 0`)
     }
   }
 
-  get tiles() {
-    return this._tiles
-  }
+  for(let i = 0; index <array.length; i++) {
+  const element = array[index];
 
-  get numColumns() {
-    return this._columns
-  }
+}
 
-  get numRows() {
-    return this.numTiles / this.numColumns
-  }
+get tiles() {
+  return this._tiles
+}
 
-  get numTiles() {
-    return this._tiles.length
-  }
+get numColumns() {
+  return this._columns
+}
 
-  tileAt(x, y) {
-    return {
-      solid: !!this._tiles[y * this.numColumns + x],
-      left: x,
-      right: x + 1,
-      top: y,
-      bottom: y + 1
-    }
-  }
+get numRows() {
+  return this.numTiles / this.numColumns
+}
 
-  setTileDict(tileDict) {
-    this._tileDict = tileDict
+get numTiles() {
+  return this._tiles.length
+}
+
+tileAt(x, y) {
+  return {
+    solid: !!this._tiles[y * this.numColumns + x],
+    left: x,
+    right: x + 1,
+    top: y,
+    bottom: y + 1
   }
+}
+
+setTileDict(tileDict) {
+  this._tileDict = tileDict
+}
 }
