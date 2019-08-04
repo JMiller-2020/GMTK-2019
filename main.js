@@ -7,6 +7,8 @@ var dialogBox
 var backgroundImage
 var models = []
 var dialogueQueue = []
+var collectableCount = 0
+var audio, isMuted = false
 
 const TICK_LENGTH = 1000 / 60
 const FRAME_LENGTH = 1000 / 60
@@ -56,6 +58,11 @@ function gameLoop(tickCount) {
     playerSpriteSheet,
     tickCount
   )
+  // draw HUD
+  view.drawHUD(
+    collectableCount,
+    isMuted
+  )
   // draw dialog
   while(dialogueQueue.length > 0) {
     const dialogue = dialogueQueue[0]
@@ -63,7 +70,11 @@ function gameLoop(tickCount) {
       dialogue.start = tickCount
     }
     if(dialogue.start + dialogue.duration > tickCount) {
-      view.drawDialogue(dialogBox, dialogueQueue[0].text)
+      if(model.w >= 18) {
+        view.drawDialogue(dialogBox, dialogueQueue[0].text)
+      } else {
+        dialogue.start++
+      }
       break
     }
     dialogueQueue.shift()
@@ -71,16 +82,14 @@ function gameLoop(tickCount) {
 }
 
 // TODO don't love how this works rn, not super flexible
-// TODO tie to some visual output: HUD or something
 function captureCollectables() {
   model.entities.forEach((entity, idx) => {
     const dx = model.player.cx - entity.cx
     const dy = model.player.cy - entity.cy
     const dist2 = dx * dx + dy * dy
     if (dist2 < 0.5) {
-      console.log('captured one')
       model.entities.splice(idx, 1)
-      return
+      collectableCount++
     }
   })
 }
@@ -111,9 +120,10 @@ function updatePlayer() {
     vx += vector[0] / unlimitedAcc * player.acc
     vy += vector[1] / unlimitedAcc * player.acc
   }
-  if ('jump' in buttonMap && buttonMap['jump']) {
-    // TODO
+  if ('jump' in buttonMap && buttonMap['jump'] && player.isGrounded) {
+    vy -= player.jumpSpeed
   }
+  player.isGrounded = false
 
   const unlimitedSpeed = Math.sqrt(vx * vx + vy * vy)
   if (unlimitedSpeed != 0) {
@@ -225,6 +235,7 @@ function worldCollisions(entity) {
       entity.x < tile.right) {
       if ((tile.collisionMask & 0b0001) && entity.ly + entity.h <= tile.top) {
         entity.y = tile.top - entity.h
+        entity.isGrounded = true
       }
       if ((tile.collisionMask & 0b0010) && entity.lx >= tile.right) {
         entity.x = tile.right
@@ -293,6 +304,19 @@ async function init() {
   view = new View(canvas)
   controller = new Controller()
   engine = new Engine(TICK_LENGTH, this.gameLoop)
+
+  audio = document.getElementById('game-music')
+  canvas.addEventListener('click', e => {
+    if(e.offsetX < 120 && e.offsetY < 36) {
+      if(isMuted) {
+        audio.play()
+        isMuted = false
+      } else {
+        audio.pause()
+        isMuted = true
+      }
+    }
+  })
 
   // retrieve resources
   await Promise.all([

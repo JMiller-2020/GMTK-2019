@@ -16,7 +16,8 @@ class Controller {
       'up': this._up,
       'down': this._down,
       'left': this._left,
-      'right': this._right
+      'right': this._right,
+      'jump': this._jump
     }
   }
 
@@ -50,6 +51,9 @@ class Controller {
         break
       case 'KeyD':
         this._right = isDown
+        break
+      case 'Space':
+        this._jump = isDown
         break
     }
   }

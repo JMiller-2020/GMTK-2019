@@ -82,11 +82,35 @@ class View {
     // this._ctx.fillRect(...this.xywhToCvsXYWH(x, y, w, h))
   }
 
+  drawHUD(collectableCount, isMuted=false) {
+    this._ctx.fillStyle = '#99994D'
+    this._ctx.strokeStyle = '#BFBF60'
+    this._ctx.textAlign = 'right'
+    this._ctx.font = '10px arial'
+    this._ctx.fillText(collectableCount, this._w - 4, this._h - 4)
+    this._ctx.strokeText(collectableCount, this._w - 4, this._h - 4)
+
+    this._ctx.fillStyle = '#315931'
+    this._ctx.strokeStyle = '#7BA37B'
+    this._ctx.textAlign = 'left'
+    this._ctx.font = '8px arial'
+    if(this._r - this._l > 12) {
+      const credit = 'Music by Eric Matyas - www.soundimage.org'
+      this._ctx.fillText(credit, 2, this._h - 4)
+      this._ctx.strokeText(credit, 2, this._h - 4)
+    }
+    const muteText = isMuted ? 'Mute' : 'Unmute'
+    this._ctx.fillText(muteText, 2, 8)
+    this._ctx.strokeText(muteText, 2, 8)
+  }
+
   // TODO Cannot for the life of me get the text to look good.
   drawDialogue(box, text) {
     const xOff = (this._w - box.img.width) / 2
     this._ctx.drawImage(box.img, Math.round(box.x + xOff), box.y)
     this._ctx.textAlign = 'center'
+    this._ctx.fillStyle = '#000000'
+    this._ctx.font = '10px arial'
     if (!text.length) {
       text = [text]
     }
