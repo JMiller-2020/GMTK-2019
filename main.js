@@ -3,6 +3,7 @@
 var model, view, controller, engine
 var canvas
 var playerSpriteSheet, collectableSpriteSheet
+var dialogBox
 
 const TICK_LENGTH = 1000 / 60
 const FRAME_LENGTH = 1000 / 60
@@ -50,9 +51,20 @@ function gameLoop(tickCount) {
     playerSpriteSheet,
     tickCount
   )
+  // draw dialog
+  // TODO base this on the level/screen and timing
+  if (tickCount < 180) {
+    view.drawDialogue(dialogBox, [
+      'Hello, and welcome to the world. I have made you a body.',
+      'And that is all.',
+      '',
+      'You are alone.'
+    ])
+  }
 }
 
 // TODO don't love how this works rn, not super flexible
+// TODO tie to some visual output: HUD or something
 function captureCollectables() {
   model.entities.forEach((entity, idx) => {
     const dx = model.player.cx - entity.cx
@@ -220,7 +232,9 @@ async function init() {
     loadImage('img/player-0.0.3.png')
         .then(img => playerSpriteSheet = new SpriteSheet(img, 16)),
     loadImage('img/collectable-0.0.1.png')
-        .then(img => collectableSpriteSheet = new SpriteSheet(img, 8))
+        .then(img => collectableSpriteSheet = new SpriteSheet(img, 8)),
+    loadImage('img/dialogue-0.0.1.png')
+        .then(img => dialogBox = new DialogBox(img))
   ])
 
   handleResize()
@@ -240,5 +254,18 @@ class Util {
     while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
     while(v === 0) v = Math.random();
     return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+  }
+}
+
+class DialogBox {
+  constructor(img) {
+    this.img = img
+    this.x = 0
+    this.y = 0
+    this.textX = 144
+    this.textY = 12
+    this.w = 268
+    this.textH = 10
+    this.center = true
   }
 }

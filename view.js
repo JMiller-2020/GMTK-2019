@@ -79,6 +79,19 @@ class View {
     // this._ctx.fillRect(...this.xywhToCvsXYWH(x, y, w, h))
   }
 
+  // TODO Cannot for the life of me get the text to look good.
+  // might have to make the dialog show up outside the canvas.
+  drawDialogue(box, text) {
+    this._ctx.drawImage(box.img, box.x, box.y)
+    this._ctx.textAlign = 'center'
+    if(!text.length) {
+      text = [text]
+    }
+    text.forEach((line, idx) => {
+      this._ctx.fillText(line, Math.round(box.textX), box.textY + box.textH * idx)
+    })
+  }
+
   resize(modelW, modelH, screenW, screenH) {
     this._w = this._cvs.width = modelW * this.tileSheet.spriteSize
     this._h = this._cvs.height = modelH * this.tileSheet.spriteSize
