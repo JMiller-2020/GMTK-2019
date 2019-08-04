@@ -57,12 +57,30 @@
   ],
   "dialogue": [
     {
-      "duration": 50,
+      "duration": 120,
       "text": [
-        "Duration is measured in ticks. Dialogue must be in order.",
-        "You get 4 lines of text. You don't have to use all of it.",
         "",
-        "Unfortunately, there's not much we can do about the font."
+        "You alone are the only life left.",
+        "",
+        "[wasd to move]"
+      ]
+    },
+    {
+      "duration": 120,
+      "text": [
+        "",
+        "...",
+        "",
+        ""
+      ]
+    },
+    {
+      "duration": 120,
+      "text": [
+        "",
+        "As far as you know.",
+        "",
+        ""
       ]
     }
   ]
