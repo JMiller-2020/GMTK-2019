@@ -7,6 +7,7 @@ var dialogBox
 var backgroundImage
 var models = []
 var dialogueQueue = []
+var collectableCount = 0
 
 const TICK_LENGTH = 1000 / 60
 const FRAME_LENGTH = 1000 / 60
@@ -56,6 +57,10 @@ function gameLoop(tickCount) {
     playerSpriteSheet,
     tickCount
   )
+  // draw HUD
+  view.drawHUD(
+    collectableCount
+  )
   // draw dialog
   while(dialogueQueue.length > 0) {
     const dialogue = dialogueQueue[0]
@@ -71,16 +76,14 @@ function gameLoop(tickCount) {
 }
 
 // TODO don't love how this works rn, not super flexible
-// TODO tie to some visual output: HUD or something
 function captureCollectables() {
   model.entities.forEach((entity, idx) => {
     const dx = model.player.cx - entity.cx
     const dy = model.player.cy - entity.cy
     const dist2 = dx * dx + dy * dy
     if (dist2 < 0.5) {
-      console.log('captured one')
       model.entities.splice(idx, 1)
-      return
+      collectableCount++
     }
   })
 }

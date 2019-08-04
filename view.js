@@ -82,11 +82,20 @@ class View {
     // this._ctx.fillRect(...this.xywhToCvsXYWH(x, y, w, h))
   }
 
+  drawHUD(collectableCount) {
+    this._ctx.fillStyle = '#99994D'
+    this._ctx.strokeStyle = '#BFBF60'
+    this._ctx.textAlign = 'right'
+    this._ctx.fillText(collectableCount, this._w - 4, this._h - 4)
+    this._ctx.strokeText(collectableCount, this._w - 4, this._h - 4)
+  }
+
   // TODO Cannot for the life of me get the text to look good.
   drawDialogue(box, text) {
     const xOff = (this._w - box.img.width) / 2
     this._ctx.drawImage(box.img, Math.round(box.x + xOff), box.y)
     this._ctx.textAlign = 'center'
+    this._ctx.fillStyle = '#000000'
     if (!text.length) {
       text = [text]
     }
