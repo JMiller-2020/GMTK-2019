@@ -58,9 +58,8 @@ class View {
     }
   }
 
-  drawEntity(x, y, w, h, spriteSheet=null, tick=0) {
+  drawEntity(x, y, w, h, spriteSheet=null, tick=0, framesPerState=20) {
     if (spriteSheet) {
-      const framesPerState = 20
       const numStates = spriteSheet.numSprites
       const animState = Math.floor(tick / framesPerState) % numStates
       const cvsCoords = this.xywhToCvsXYWH(x, y, w, h)

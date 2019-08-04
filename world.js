@@ -1,11 +1,7 @@
 'use strict';
 
 class World {
-  constructor() {
-
-  }
-
-  setup(level) {
+  constructor(level) {
     this._textures = level.textures
     this._collisions = level.collisions
     this._columns = level.numColumns

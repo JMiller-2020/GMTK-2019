@@ -4,6 +4,7 @@ var model, view, controller, engine
 var canvas
 var playerSpriteSheet, collectableSpriteSheet
 var dialogBox
+var models = []
 
 const TICK_LENGTH = 1000 / 60
 const FRAME_LENGTH = 1000 / 60
@@ -39,7 +40,8 @@ function gameLoop(tickCount) {
       entity.w,
       entity.h,
       collectableSpriteSheet,
-      tickCount
+      tickCount,
+      10
     )
   })
   // draw player
@@ -107,9 +109,68 @@ function updatePlayer() {
   if ('jump' in buttonMap && buttonMap['jump']) {
     // TODO
   }
+  
+  const unlimitedSpeed = Math.sqrt(vx * vx + vy * vy)
+  if (unlimitedSpeed != 0) {
+    let speed = unlimitedSpeed
+    if (speed > player.minDragSpeed) {
+      speed = unlimitedSpeed - player.drag
+    }
+    if (speed < 0) {
+      speed = 0
+    } else if (speed > player.maxSpeed) {
+      speed = player.maxSpeed
+    }
+    vx = speed * vx / unlimitedSpeed
+    vy = speed * vy / unlimitedSpeed
+  }
 
-  // the rest is deterministic
-  tick(player, vx, vy)
+  // add gravity after limiting speed
+  // and jump? Not quite enjoyable yet.
+  vy += model.gravity
+
+  player.lx = player.x
+  player.ly = player.y
+  player.x += vx
+  player.y += vy
+
+  worldCollisions(player)
+  checkDoors()
+}
+
+function checkDoors() {
+  let point = [model.player.cx, model.player.cy]
+  const loc = point.map(Math.floor)
+  model.doors.forEach(door => {
+    door.locations.forEach(doorLoc => {
+      if (loc[0] == doorLoc[0] && loc[1] == doorLoc[1]) {
+        console.log(door, loc)
+        const lastModel = model
+        let loadLevel
+        if(models[door.to]) {
+          loadLevel = new Promise((res) => {
+            model = models[door.to]
+            res()
+          })
+        } else {
+          loadLevel = fetch(Util.levelPath(door.to))
+              .then(json => json.json())
+              .then(level => {
+                model = new Model(level)
+                models[door.to] = model
+              })
+        }
+        Promise.all([loadLevel]).then(() =>{
+          view.setBounds(0, 0, model.w, model.h)
+          handleResize()
+          model.player.x = lastModel.player.x + door.relativePos[0]
+          model.player.y = lastModel.player.y + door.relativePos[1]
+          model.player.lx = lastModel.player.lx + door.relativePos[0]
+          model.player.ly = lastModel.player.ly + door.relativePos[1]
+        })
+      }
+    })
+  })
 }
 
 function updateEntity(entity) {
@@ -123,10 +184,6 @@ function updateEntity(entity) {
   }
 
   // the rest is deterministic
-  tick(entity, vx, vy)
-}
-
-function tick(entity, vx, vy) {
   const unlimitedSpeed = Math.sqrt(vx * vx + vy * vy)
   if (unlimitedSpeed != 0) {
     let speed = unlimitedSpeed
@@ -220,16 +277,18 @@ async function init() {
 
   canvas = document.getElementById('game-canvas')
 
-  model = new Model(18, 12)
   view = new View(canvas)
   controller = new Controller()
   engine = new Engine(TICK_LENGTH, this.gameLoop)
 
   // retrieve resources
   await Promise.all([
-    fetch('levels/00.json')
+    fetch(Util.levelPath(0))
         .then(json => json.json())
-        .then(level => model.setup(level)),
+        .then(level => {
+          model = new Model(level)
+          models[0] = model
+        }),
     loadImage('img/tilesheet-0.0.4.png')
         .then(tileSheet => view.setTileSheet(tileSheet, 16)),
     loadImage('img/player-0.0.3.png')
@@ -257,6 +316,10 @@ class Util {
     while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
     while(v === 0) v = Math.random();
     return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+  }
+
+  static levelPath(id) {
+    return `levels/${id.toString().padStart(2, '0')}.json`
   }
 }
 
