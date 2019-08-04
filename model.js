@@ -24,10 +24,10 @@ class Model {
     level.entities.forEach((id, idx) => {
       if(id) {
         this.entities.push(new Entity(
-            idx % this.w,
-            Math.floor(idx / this.w),
-            1/8,
-            1/8,
+            idx % this.w + 6/16,
+            Math.floor(idx / this.w) + 6/16,
+            4/16,
+            4/16,
             0.002,
             0.03,
             0.001,
@@ -53,6 +53,14 @@ class Entity {
     this.lx = x
     this.ly = y
     this._collisionPoints = this.generateCollisionPoints()
+  }
+
+  get cx() {
+    return this.x + this.w / 2
+  }
+
+  get cy() {
+    return this.y + this.h / 2
   }
 
   collisionPoint(idx) {

@@ -21,6 +21,7 @@ function main() {
 function gameLoop(tickCount) {
   // console.log(tickCount)
 
+  captureCollectables()
   updatePlayer()
   model.entities.forEach(entity => updateEntity(entity))
 
@@ -44,6 +45,20 @@ function gameLoop(tickCount) {
     playerSpriteSheet,
     tickCount
   )
+}
+
+// TODO don't love how this works rn, not super flexible
+function captureCollectables() {
+  model.entities.forEach((entity, idx) => {
+    const dx = model.player.cx - entity.cx
+    const dy = model.player.cy - entity.cy
+    const dist2 = dx * dx + dy * dy
+    if (dist2 < 0.5) {
+      console.log('captured one')
+      model.entities.splice(idx, 1)
+      return
+    }
+  })
 }
 
 function updatePlayer() {
