@@ -92,10 +92,10 @@ function tick() {
     const loc = point.map(Math.floor)
     const tile = model.world.tileAt(...loc)
     if (tile.collisionMask &&
-        player.y + player.h > tile.top &&
-        player.y < tile.bottom &&
-        player.x + player.w > tile.left &&
-        player.x < tile.right) {
+      player.y + player.h > tile.top &&
+      player.y < tile.bottom &&
+      player.x + player.w > tile.left &&
+      player.x < tile.right) {
       if ((tile.collisionMask & 0b0001) && vy > 0 && player.ly + player.h <= tile.top) {
         player.y = tile.top - player.h
       }
@@ -158,12 +158,12 @@ async function init() {
   // retrieve resources
   await Promise.all([
     fetch('levels/00.json')
-        .then(json => json.json())
-        .then(level => model.setup(level)),
+      .then(json => json.json())
+      .then(level => model.setup(level)),
     loadImage('img/tilesheet-0.0.1.png')
-        .then(tileSheet => view.setTileSheet(tileSheet, 16)),
+      .then(tileSheet => view.setTileSheet(tileSheet, 16)),
     loadImage('img/player-0.0.1.png')
-        .then(img => playerSpriteSheet = new SpriteSheet(img, 16))
+      .then(img => playerSpriteSheet = new SpriteSheet(img, 16)),
   ])
 
   handleResize()

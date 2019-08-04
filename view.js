@@ -19,12 +19,12 @@ class View {
     this._b = y2
   }
 
-  setTileSheet(tileSheet, tileSize=16) {
+  setTileSheet(tileSheet, tileSize = 16) {
     this.tileSheet = new SpriteSheet(tileSheet, tileSize)
 
     console.log('spritesheet:',
-        `${tileSheet.naturalWidth}x${tileSheet.naturalHeight}`,
-        `(${this.tileSheet.numColumns}x${this.tileSheet.numRows})`)
+      `${tileSheet.naturalWidth}x${tileSheet.naturalHeight}`,
+      `(${this.tileSheet.numColumns}x${this.tileSheet.numRows})`)
   }
 
   xywhToCvsXYWH(x, y, w, h) {
@@ -53,12 +53,12 @@ class View {
     for (let i = 0; i < texIdxs.length; i++) {
       const texIdx = texIdxs[i]
       this._ctx.drawImage(this.tileSheet.img,
-          ...this.tileSheet.indexToXYWH(texIdx),
-          ...this.indexToCvsXYWH(i, c))
+        ...this.tileSheet.indexToXYWH(texIdx),
+        ...this.indexToCvsXYWH(i, c))
     }
   }
 
-  drawPlayer(x, y, w, h, spriteSheet, tick=0) {
+  drawPlayer(x, y, w, h, spriteSheet, tick = 0) {
     const framesPerState = 20
     const numStates = spriteSheet.numSprites
     const animState = Math.floor(tick / framesPerState) % numStates
@@ -69,9 +69,9 @@ class View {
 
   randN() {
     var u = 0, v = 0;
-    while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
-    while(v === 0) v = Math.random();
-    return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+    while (u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+    while (v === 0) v = Math.random();
+    return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
   }
 
   resize(modelW, modelH, screenW, screenH) {
@@ -86,10 +86,10 @@ class SpriteSheet {
   constructor(img, spriteSize) {
     this.img = img
     this._spriteSize = spriteSize
-    if(img.naturalWidth % spriteSize != 0) {
+    if (img.naturalWidth % spriteSize != 0) {
       console.log(`bad tile sheet width: ${tileSheet.naturalWidth} % ${spriteSize} != 0`)
     }
-    if(img.naturalHeight % spriteSize != 0) {
+    if (img.naturalHeight % spriteSize != 0) {
       console.log(`bad tile sheet height: ${tileSheet.naturalHeight} % ${spriteSize} != 0`)
     }
   }
