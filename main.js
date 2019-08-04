@@ -114,9 +114,10 @@ function updatePlayer() {
     vx += vector[0] / unlimitedAcc * player.acc
     vy += vector[1] / unlimitedAcc * player.acc
   }
-  if ('jump' in buttonMap && buttonMap['jump']) {
-    // TODO
+  if ('jump' in buttonMap && buttonMap['jump'] && player.isGrounded) {
+    vy -= player.jumpSpeed
   }
+  player.isGrounded = false
 
   const unlimitedSpeed = Math.sqrt(vx * vx + vy * vy)
   if (unlimitedSpeed != 0) {
@@ -228,6 +229,7 @@ function worldCollisions(entity) {
       entity.x < tile.right) {
       if ((tile.collisionMask & 0b0001) && entity.ly + entity.h <= tile.top) {
         entity.y = tile.top - entity.h
+        entity.isGrounded = true
       }
       if ((tile.collisionMask & 0b0010) && entity.lx >= tile.right) {
         entity.x = tile.right

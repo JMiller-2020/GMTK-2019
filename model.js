@@ -37,7 +37,7 @@ class Model {
 }
 
 class Entity {
-  constructor(x, y, w, h, acc=0.01, maxSpeed=0.1, drag=0.005, minDragSpeed=0.01) {
+  constructor(x, y, w, h, acc=0.01, maxSpeed=0.1, drag=0.005, minDragSpeed=0.01, jumpSpeed=0) {
     this.x = x
     this.y = y
     this.w = w
@@ -49,6 +49,7 @@ class Entity {
 
     this.lx = x
     this.ly = y
+    this.jumpSpeed = jumpSpeed
     this._collisionPoints = this.generateCollisionPoints()
   }
 
