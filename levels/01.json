@@ -99,7 +99,7 @@
   ],
   "dialogue": [
     {
-      "duration": 300,
+      "duration": 50,
       "text": [
         "Dialogue is loaded when a level is, so we can have",
         "it show up later.",
@@ -108,7 +108,7 @@
       ]
     },
     {
-      "duration": 300,
+      "duration": 50,
       "text": [
         "Additional dialogue will render right after the previous,",
         "and it will stack with dialogue from other screens/levels",
