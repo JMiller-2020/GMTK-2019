@@ -111,7 +111,7 @@ function updatePlayer() {
   if ('jump' in buttonMap && buttonMap['jump']) {
     // TODO
   }
-  
+
   const unlimitedSpeed = Math.sqrt(vx * vx + vy * vy)
   if (unlimitedSpeed != 0) {
     let speed = unlimitedSpeed
@@ -149,20 +149,20 @@ function checkDoors() {
         console.log(door, loc)
         const lastModel = model
         let loadLevel
-        if(models[door.to]) {
+        if (models[door.to]) {
           loadLevel = new Promise((res) => {
             model = models[door.to]
             res()
           })
         } else {
           loadLevel = fetch(Util.levelPath(door.to))
-              .then(json => json.json())
-              .then(level => {
-                model = new Model(level)
-                models[door.to] = model
-              })
+            .then(json => json.json())
+            .then(level => {
+              model = new Model(level)
+              models[door.to] = model
+            })
         }
-        Promise.all([loadLevel]).then(() =>{
+        Promise.all([loadLevel]).then(() => {
           view.setBounds(0, 0, model.w, model.h)
           handleResize()
           model.player.x = lastModel.player.x + door.relativePos[0]
@@ -286,11 +286,11 @@ async function init() {
   // retrieve resources
   await Promise.all([
     fetch(Util.levelPath(0))
-        .then(json => json.json())
-        .then(level => {
-          model = new Model(level)
-          models[0] = model
-        }),
+      .then(json => json.json())
+      .then(level => {
+        model = new Model(level)
+        models[0] = model
+      }),
     loadImage('img/tilesheet-0.0.4.png')
       .then(tileSheet => view.setTileSheet(tileSheet, 16)),
     loadImage('img/player-0.0.3.png')
@@ -299,7 +299,7 @@ async function init() {
       .then(img => collectableSpriteSheet = new SpriteSheet(img, 8)),
     loadImage('img/dialogue-0.0.1.png')
       .then(img => dialogBox = new DialogBox(img)),
-    loadImage('img/tilesheet-0.0.1.png')
+    loadImage('img/backgroundImage.png')
       .then(img => backgroundImage = img)
   ])
 
