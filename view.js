@@ -63,13 +63,20 @@ class View {
       const framesPerState = 20
       const numStates = spriteSheet.numSprites
       const animState = Math.floor(tick / framesPerState) % numStates
+      const cvsCoords = this.xywhToCvsXYWH(x, y, w, h)
+      cvsCoords[0] -= (spriteSheet.spriteSize - cvsCoords[2]) / 2
+      cvsCoords[1] -= (spriteSheet.spriteSize - cvsCoords[3]) / 2
+      cvsCoords.splice(2, 2, spriteSheet.spriteSize, spriteSheet.spriteSize)
       this._ctx.drawImage(spriteSheet.img,
         ...spriteSheet.indexToXYWH(animState),
-        ...this.xywhToCvsXYWH(x, y, w, h))
+        ...cvsCoords)
     } else {
       this._ctx.fillStyle = '#ff00ff'
       this._ctx.fillRect(...this.xywhToCvsXYWH(x, y, w, h))
     }
+    // debug mode
+    // this._ctx.fillStyle = '#ff00ff'
+    // this._ctx.fillRect(...this.xywhToCvsXYWH(x, y, w, h))
   }
 
   resize(modelW, modelH, screenW, screenH) {

@@ -1,7 +1,8 @@
 'use strict';
 
 var model, view, controller, engine
-var canvas, playerSpriteSheet
+var canvas
+var playerSpriteSheet, collectableSpriteSheet
 
 const TICK_LENGTH = 1000 / 60
 const FRAME_LENGTH = 1000 / 60
@@ -26,6 +27,8 @@ function gameLoop(tickCount) {
   model.entities.forEach(entity => updateEntity(entity))
 
   view.clear()
+  // TODO draw background here
+
   view.drawWorld(model.world.textures, model.world.numColumns)
   // draw collectables
   model.entities.forEach(entity => {
@@ -33,15 +36,17 @@ function gameLoop(tickCount) {
       entity.x,
       entity.y,
       entity.w,
-      entity.h
+      entity.h,
+      collectableSpriteSheet,
+      tickCount
     )
   })
   // draw player
   view.drawEntity(
-    model.player.x - 3/16,
-    model.player.y - 3/16,
-    1,
-    1,
+    model.player.x,
+    model.player.y,
+    model.player.w,
+    model.player.h,
     playerSpriteSheet,
     tickCount
   )
@@ -213,7 +218,9 @@ async function init() {
     loadImage('img/tilesheet-0.0.4.png')
         .then(tileSheet => view.setTileSheet(tileSheet, 16)),
     loadImage('img/player-0.0.3.png')
-        .then(img => playerSpriteSheet = new SpriteSheet(img, 16))
+        .then(img => playerSpriteSheet = new SpriteSheet(img, 16)),
+    loadImage('img/collectable-0.0.1.png')
+        .then(img => collectableSpriteSheet = new SpriteSheet(img, 8))
   ])
 
   handleResize()
