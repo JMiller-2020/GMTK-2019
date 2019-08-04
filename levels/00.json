@@ -57,7 +57,7 @@
   ],
   "dialogue": [
     {
-      "duration": 300,
+      "duration": 50,
       "text": [
         "Duration is measured in ticks. Dialogue must be in order.",
         "You get 4 lines of text. You don't have to use all of it.",
