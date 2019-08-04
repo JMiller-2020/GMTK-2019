@@ -90,13 +90,15 @@ class View {
     this._ctx.fillText(collectableCount, this._w - 4, this._h - 4)
     this._ctx.strokeText(collectableCount, this._w - 4, this._h - 4)
 
-    this._ctx.fillStyle = '#315931'
-    this._ctx.strokeStyle = '#7BA37B'
-    this._ctx.textAlign = 'left'
-    this._ctx.font = '8px arial'
-    const credit = 'Music by Eric Matyas - www.soundimage.org'
-    this._ctx.fillText(credit, 4, this._h - 4)
-    this._ctx.strokeText(credit, 4, this._h - 4)
+    if(this._r - this._l > 12) {
+      this._ctx.fillStyle = '#315931'
+      this._ctx.strokeStyle = '#7BA37B'
+      this._ctx.textAlign = 'left'
+      this._ctx.font = '8px arial'
+      const credit = 'Music by Eric Matyas - www.soundimage.org'
+      this._ctx.fillText(credit, 4, this._h - 4)
+      this._ctx.strokeText(credit, 4, this._h - 4)
+    }
   }
 
   // TODO Cannot for the life of me get the text to look good.

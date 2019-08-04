@@ -68,7 +68,11 @@ function gameLoop(tickCount) {
       dialogue.start = tickCount
     }
     if(dialogue.start + dialogue.duration > tickCount) {
-      view.drawDialogue(dialogBox, dialogueQueue[0].text)
+      if(model.w >= 18) {
+        view.drawDialogue(dialogBox, dialogueQueue[0].text)
+      } else {
+        dialogue.start++
+      }
       break
     }
     dialogueQueue.shift()
