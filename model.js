@@ -1,15 +1,35 @@
 'use strict';
 
 class Model {
-  constructor(w, h) {
-    this.w = w
-    this.h = h
+  constructor(level) {
+    console.log(level)
+    this.world = new World(level)
+    this.w = this.world.numColumns
+    this.h = this.world.numRows
+    this.entities = []
+    level.entities.forEach((id, idx) => {
+      if(id) {
+        this.entities.push(new Entity(
+            idx % this.w + 6/16,
+            Math.floor(idx / this.w) + 6/16,
+            4/16,
+            4/16,
+            0.004,
+            0.03,
+            0.001,
+            0.002
+        ))
+      }
+    })
+    this.gravity = level.gravity || 0.0
 
-    this.gravity = 0.0
+    if(level.player) {
+      this.player = new Entity(...level.player.location, 10/16, 10/16)
+    } else {
+      this.player = new Entity(2, 2, 10/16, 10/16)
+    }
 
-    this.player = new Entity(2, 2, 10/16, 10/16)
-
-    this.world = new World()
+    this.doors = level.doors
   }
 
   get ratio() {
@@ -35,7 +55,7 @@ class Model {
         ))
       }
     })
-    console.log(`spawned ${this.entities.length} entities`)
+    this.doors = level.doors
   }
 }
 
