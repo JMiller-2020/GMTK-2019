@@ -4,6 +4,7 @@ var model, view, controller, engine
 var canvas
 var playerSpriteSheet, collectableSpriteSheet
 var dialogBox
+var backgroundImage
 
 const TICK_LENGTH = 1000 / 60
 const FRAME_LENGTH = 1000 / 60
@@ -29,6 +30,7 @@ function gameLoop(tickCount) {
 
   view.clear()
   // TODO draw background here
+  view.drawBackground(backgroundImage)
 
   view.drawWorld(model.world.textures, model.world.numColumns)
   // draw collectables
@@ -161,10 +163,10 @@ function worldCollisions(entity) {
     const loc = point.map(Math.floor)
     const tile = model.world.tileAt(...loc)
     if (tile.collisionMask &&
-        entity.y + entity.h > tile.top &&
-        entity.y < tile.bottom &&
-        entity.x + entity.w > tile.left &&
-        entity.x < tile.right) {
+      entity.y + entity.h > tile.top &&
+      entity.y < tile.bottom &&
+      entity.x + entity.w > tile.left &&
+      entity.x < tile.right) {
       if ((tile.collisionMask & 0b0001) && entity.ly + entity.h <= tile.top) {
         entity.y = tile.top - entity.h
       }
@@ -228,16 +230,18 @@ async function init() {
   // retrieve resources
   await Promise.all([
     fetch('levels/00.json')
-        .then(json => json.json())
-        .then(level => model.setup(level)),
+      .then(json => json.json())
+      .then(level => model.setup(level)),
     loadImage('img/tilesheet-0.0.4.png')
-        .then(tileSheet => view.setTileSheet(tileSheet, 16)),
+      .then(tileSheet => view.setTileSheet(tileSheet, 16)),
     loadImage('img/player-0.0.3.png')
-        .then(img => playerSpriteSheet = new SpriteSheet(img, 16)),
+      .then(img => playerSpriteSheet = new SpriteSheet(img, 16)),
     loadImage('img/collectable-0.0.1.png')
-        .then(img => collectableSpriteSheet = new SpriteSheet(img, 8)),
+      .then(img => collectableSpriteSheet = new SpriteSheet(img, 8)),
     loadImage('img/dialogue-0.0.1.png')
-        .then(img => dialogBox = new DialogBox(img))
+      .then(img => dialogBox = new DialogBox(img)),
+    loadImage('img/tilesheet-0.0.1.png')
+      .then(img => backgroundImage = img)
   ])
 
   handleResize()
@@ -254,9 +258,9 @@ window.onload = init
 class Util {
   static randN() {
     var u = 0, v = 0;
-    while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
-    while(v === 0) v = Math.random();
-    return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+    while (u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+    while (v === 0) v = Math.random();
+    return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
   }
 }
 

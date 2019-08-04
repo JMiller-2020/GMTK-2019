@@ -19,12 +19,12 @@ class View {
     this._b = y2
   }
 
-  setTileSheet(tileSheet, tileSize=16) {
+  setTileSheet(tileSheet, tileSize = 16) {
     this.tileSheet = new SpriteSheet(tileSheet, tileSize)
 
     console.log('spritesheet:',
-        `${tileSheet.naturalWidth}x${tileSheet.naturalHeight}`,
-        `(${this.tileSheet.numColumns}x${this.tileSheet.numRows})`)
+      `${tileSheet.naturalWidth}x${tileSheet.naturalHeight}`,
+      `(${this.tileSheet.numColumns}x${this.tileSheet.numRows})`)
   }
 
   xywhToCvsXYWH(x, y, w, h) {
@@ -53,12 +53,16 @@ class View {
     for (let i = 0; i < texIdxs.length; i++) {
       const texIdx = texIdxs[i]
       this._ctx.drawImage(this.tileSheet.img,
-          ...this.tileSheet.indexToXYWH(texIdx),
-          ...this.indexToCvsXYWH(i, c))
+        ...this.tileSheet.indexToXYWH(texIdx),
+        ...this.indexToCvsXYWH(i, c))
     }
   }
 
-  drawEntity(x, y, w, h, spriteSheet=null, tick=0) {
+  drawBackground(backgroundImage) {
+    this._ctx.drawImage(backgroundImage, 0, 0, this._w, this._h, 0, 0, this._w, this._h)
+  }
+
+  drawEntity(x, y, w, h, spriteSheet = null, tick = 0) {
     if (spriteSheet) {
       const framesPerState = 20
       const numStates = spriteSheet.numSprites
@@ -84,7 +88,7 @@ class View {
   drawDialogue(box, text) {
     this._ctx.drawImage(box.img, box.x, box.y)
     this._ctx.textAlign = 'center'
-    if(!text.length) {
+    if (!text.length) {
       text = [text]
     }
     text.forEach((line, idx) => {
@@ -104,10 +108,10 @@ class SpriteSheet {
   constructor(img, spriteSize) {
     this.img = img
     this._spriteSize = spriteSize
-    if(img.naturalWidth % spriteSize != 0) {
+    if (img.naturalWidth % spriteSize != 0) {
       console.log(`bad tile sheet width: ${tileSheet.naturalWidth} % ${spriteSize} != 0`)
     }
-    if(img.naturalHeight % spriteSize != 0) {
+    if (img.naturalHeight % spriteSize != 0) {
       console.log(`bad tile sheet height: ${tileSheet.naturalHeight} % ${spriteSize} != 0`)
     }
   }
