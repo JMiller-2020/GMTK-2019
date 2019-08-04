@@ -33,7 +33,7 @@
   "doors": [
     {
       "to": 1,
-      "relativePos": [16, -7],
+      "relativePos": [16, -8],
       "locations": [
         [1, 8],
         [2, 8],

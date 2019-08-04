@@ -22,6 +22,10 @@ class Engine {
     console.log('engine stopped')
   }
 
+  get tickCount() {
+    return this._tickCount
+  }
+
   _tick(timestamp) {
     this._animFrame = requestAnimationFrame(this._tick.bind(this))
     const timeSince = timestamp - this._last

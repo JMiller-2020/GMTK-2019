@@ -2,7 +2,6 @@
 
 class Model {
   constructor(level) {
-    console.log(level)
     this.world = new World(level)
     this.w = this.world.numColumns
     this.h = this.world.numRows
@@ -34,28 +33,6 @@ class Model {
 
   get ratio() {
     return this.w / this.h
-  }
-
-  setup(level) {
-    this.world.setup(level)
-    this.w = this.world.numColumns
-    this.h = this.world.numRows
-    this.entities = []
-    level.entities.forEach((id, idx) => {
-      if(id) {
-        this.entities.push(new Entity(
-            idx % this.w + 6/16,
-            Math.floor(idx / this.w) + 6/16,
-            4/16,
-            4/16,
-            0.004,
-            0.03,
-            0.001,
-            0.002
-        ))
-      }
-    })
-    this.doors = level.doors
   }
 }
 

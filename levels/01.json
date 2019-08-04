@@ -81,7 +81,7 @@
   "doors": [
     {
       "to": 0,
-      "relativePos": [17, 0],
+      "relativePos": [18, 0],
       "locations": [
         [-1, 4],
         [-1, 5]
@@ -89,11 +89,31 @@
     },
     {
       "to": 2,
-      "relativePos": [-16, 7],
+      "relativePos": [-16, 8],
       "locations": [
         [17, -1],
         [18, -1],
         [19, -1]
+      ]
+    }
+  ],
+  "dialogue": [
+    {
+      "duration": 300,
+      "text": [
+        "Dialogue is loaded when a level is, so we can have",
+        "it show up later.",
+        "It only happens on the first load though,",
+        "so it's not super robust."
+      ]
+    },
+    {
+      "duration": 300,
+      "text": [
+        "Additional dialogue will render right after the previous,",
+        "and it will stack with dialogue from other screens/levels",
+        "",
+        ""
       ]
     }
   ]

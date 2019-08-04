@@ -48,10 +48,21 @@
   "doors": [
     {
       "to": 1,
-      "relativePos": [-17, 0],
+      "relativePos": [-18, 0],
       "locations": [
         [18, 4],
         [18, 5]
+      ]
+    }
+  ],
+  "dialogue": [
+    {
+      "duration": 300,
+      "text": [
+        "Duration is measured in ticks. Dialogue must be in order.",
+        "You get 4 lines of text. You don't have to use all of it.",
+        "",
+        "Unfortunately, there's not much we can do about the font."
       ]
     }
   ]

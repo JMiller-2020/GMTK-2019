@@ -5,6 +5,7 @@ var canvas
 var playerSpriteSheet, collectableSpriteSheet
 var dialogBox
 var models = []
+var dialogueQueue = []
 
 const TICK_LENGTH = 1000 / 60
 const FRAME_LENGTH = 1000 / 60
@@ -54,14 +55,16 @@ function gameLoop(tickCount) {
     tickCount
   )
   // draw dialog
-  // TODO base this on the level/screen and timing
-  if (tickCount < 180) {
-    view.drawDialogue(dialogBox, [
-      'Hello, and welcome to the world. I have made you a body.',
-      'And that is all.',
-      '',
-      'You are alone.'
-    ])
+  while(dialogueQueue.length > 0) {
+    const dialogue = dialogueQueue[0]
+    if(!dialogue.start) {
+      dialogue.start = tickCount
+    }
+    if(dialogue.start + dialogue.duration > tickCount) {
+      view.drawDialogue(dialogBox, dialogueQueue[0].text)
+      break
+    }
+    dialogueQueue.shift()
   }
 }
 
@@ -144,29 +147,25 @@ function checkDoors() {
   model.doors.forEach(door => {
     door.locations.forEach(doorLoc => {
       if (loc[0] == doorLoc[0] && loc[1] == doorLoc[1]) {
-        console.log(door, loc)
+        engine.stop()
         const lastModel = model
-        let loadLevel
+        let promise
         if(models[door.to]) {
-          loadLevel = new Promise((res) => {
+          promise = new Promise((res) => {
             model = models[door.to]
             res()
           })
         } else {
-          loadLevel = fetch(Util.levelPath(door.to))
-              .then(json => json.json())
-              .then(level => {
-                model = new Model(level)
-                models[door.to] = model
-              })
+          promise = loadLevel(door.to)
         }
-        Promise.all([loadLevel]).then(() =>{
+        Promise.all([promise]).then(() =>{
           view.setBounds(0, 0, model.w, model.h)
           handleResize()
           model.player.x = lastModel.player.x + door.relativePos[0]
           model.player.y = lastModel.player.y + door.relativePos[1]
           model.player.lx = lastModel.player.lx + door.relativePos[0]
           model.player.ly = lastModel.player.ly + door.relativePos[1]
+          engine.start()
         })
       }
     })
@@ -273,6 +272,18 @@ function loadImage(url) {
   })
 }
 
+function loadLevel(levelId) {
+  return fetch(Util.levelPath(levelId))
+      .then(json => json.json())
+      .then(level => {
+        model = new Model(level)
+        models[levelId] = model
+        if(level.dialogue) {
+          dialogueQueue.push(...level.dialogue)
+        }
+      })
+}
+
 async function init() {
 
   canvas = document.getElementById('game-canvas')
@@ -283,12 +294,7 @@ async function init() {
 
   // retrieve resources
   await Promise.all([
-    fetch(Util.levelPath(0))
-        .then(json => json.json())
-        .then(level => {
-          model = new Model(level)
-          models[0] = model
-        }),
+    loadLevel(0),
     loadImage('img/tilesheet-0.0.4.png')
         .then(tileSheet => view.setTileSheet(tileSheet, 16)),
     loadImage('img/player-0.0.3.png')
