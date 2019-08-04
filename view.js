@@ -62,8 +62,6 @@ class View {
     const framesPerState = 20
     const numStates = spriteSheet.numSprites
     const animState = Math.floor(tick / framesPerState) % numStates
-    // x += this.randN() / 100
-    // y += this.randN() / 100
     this._ctx.drawImage(spriteSheet.img,
       ...spriteSheet.indexToXYWH(animState),
       ...this.xywhToCvsXYWH(x, y, w, h))

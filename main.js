@@ -64,11 +64,14 @@ function tick() {
 
   const unlimitedSpeed = Math.sqrt(vx * vx + vy * vy)
   if (unlimitedSpeed != 0) {
-    let speed = unlimitedSpeed - player.drag
+    let speed = unlimitedSpeed
+    if (speed > player.minDragSpeed) {
+      speed = unlimitedSpeed - player.drag
+    }
     if (speed < 0) {
       speed = 0
-    } else if (speed > player.MaxSpeed) {
-      speed = player.MaxSpeed
+    } else if (speed > model.maxSpeed) {
+      speed = model.maxSpeed
     }
     vx = speed * vx / unlimitedSpeed
     vy = speed * vy / unlimitedSpeed
@@ -76,7 +79,7 @@ function tick() {
 
   // add gravity after limiting speed
   // and jump? Not quite enjoyable yet.
-  // vy += model.gravity
+  vy += model.gravity
 
   player.lx = player.x
   player.ly = player.y

@@ -5,7 +5,7 @@ class Model {
     this.w = w
     this.h = h
 
-    this.gravity = 0.4
+    this.gravity = 0.0
     this.maxSpeed = 0.1
 
     this.player = new Player(2, 2, 0.8, 0.8)
@@ -33,7 +33,8 @@ class Player {
     this.lx = x
     this.ly = y
     this.acc = 0.02
-    this.drag = 0.01
+    this.drag = 0.005
+    this.minDragSpeed = 0.01
     this._collisionPoints = this.generateCollisionPoints()
   }
 
