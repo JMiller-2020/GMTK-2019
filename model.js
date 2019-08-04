@@ -6,9 +6,8 @@ class Model {
     this.h = h
 
     this.gravity = 0.0
-    this.maxSpeed = 0.1
 
-    this.player = new Player(2, 2, 0.8, 0.8)
+    this.player = new Entity(2, 2, 0.8, 0.8)
 
     this.world = new World()
   }
@@ -21,20 +20,38 @@ class Model {
     this.world.setup(level)
     this.w = this.world.numColumns
     this.h = this.world.numRows
+    this.entities = []
+    level.entities.forEach((id, idx) => {
+      if(id) {
+        this.entities.push(new Entity(
+            idx % this.w,
+            Math.floor(idx / this.w),
+            1/8,
+            1/8,
+            0.002,
+            0.03,
+            0.001,
+            0.002
+        ))
+      }
+    })
+    console.log(`spawned ${this.entities.length} entities`)
   }
 }
 
-class Player {
-  constructor(x, y, w, h) {
+class Entity {
+  constructor(x, y, w, h, acc=0.01, maxSpeed=0.1, drag=0.005, minDragSpeed=0.01) {
     this.x = x
     this.y = y
     this.w = w
     this.h = h
+    this.acc = acc
+    this.maxSpeed = maxSpeed
+    this.drag = drag
+    this.minDragSpeed = minDragSpeed
+
     this.lx = x
     this.ly = y
-    this.acc = 0.02
-    this.drag = 0.005
-    this.minDragSpeed = 0.01
     this._collisionPoints = this.generateCollisionPoints()
   }
 

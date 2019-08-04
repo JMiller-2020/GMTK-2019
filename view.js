@@ -58,20 +58,18 @@ class View {
     }
   }
 
-  drawPlayer(x, y, w, h, spriteSheet, tick=0) {
-    const framesPerState = 20
-    const numStates = spriteSheet.numSprites
-    const animState = Math.floor(tick / framesPerState) % numStates
-    this._ctx.drawImage(spriteSheet.img,
-      ...spriteSheet.indexToXYWH(animState),
-      ...this.xywhToCvsXYWH(x, y, w, h))
-  }
-
-  randN() {
-    var u = 0, v = 0;
-    while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
-    while(v === 0) v = Math.random();
-    return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+  drawEntity(x, y, w, h, spriteSheet=null, tick=0) {
+    if (spriteSheet) {
+      const framesPerState = 20
+      const numStates = spriteSheet.numSprites
+      const animState = Math.floor(tick / framesPerState) % numStates
+      this._ctx.drawImage(spriteSheet.img,
+        ...spriteSheet.indexToXYWH(animState),
+        ...this.xywhToCvsXYWH(x, y, w, h))
+    } else {
+      this._ctx.fillStyle = '#ff00ff'
+      this._ctx.fillRect(...this.xywhToCvsXYWH(x, y, w, h))
+    }
   }
 
   resize(modelW, modelH, screenW, screenH) {
