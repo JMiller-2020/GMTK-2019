@@ -21,13 +21,24 @@ function main() {
 function gameLoop(tickCount) {
   // console.log(tickCount)
 
-  tick()  // maybe use axes too?
+  updatePlayer()
+  model.entities.forEach(entity => updateEntity(entity))
 
   view.clear()
   view.drawWorld(model.world.textures, model.world.numColumns)
-  view.drawPlayer(
-    model.player.x - 0.1,
-    model.player.y - 0.1,
+  // draw collectables
+  model.entities.forEach(entity => {
+    view.drawEntity(
+      entity.x,
+      entity.y,
+      entity.w,
+      entity.h
+    )
+  })
+  // draw player
+  view.drawEntity(
+    model.player.x - 3/16,
+    model.player.y - 3/16,
     1,
     1,
     playerSpriteSheet,
@@ -35,7 +46,7 @@ function gameLoop(tickCount) {
   )
 }
 
-function tick() {
+function updatePlayer() {
   const buttonMap = controller.buttonMap
   const player = model.player
   let vx = player.x - player.lx
@@ -62,16 +73,35 @@ function tick() {
     // TODO
   }
 
+  // the rest is deterministic
+  tick(player, vx, vy)
+}
+
+function updateEntity(entity) {
+  let vx = entity.x - entity.lx
+  let vy = entity.y - entity.ly
+  let vector = [Util.randN(), Util.randN()]
+  const unlimitedAcc = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1])
+  if (unlimitedAcc != 0) {
+    vx += vector[0] / unlimitedAcc * entity.acc
+    vy += vector[1] / unlimitedAcc * entity.acc
+  }
+
+  // the rest is deterministic
+  tick(entity, vx, vy)
+}
+
+function tick(entity, vx, vy) {
   const unlimitedSpeed = Math.sqrt(vx * vx + vy * vy)
   if (unlimitedSpeed != 0) {
     let speed = unlimitedSpeed
-    if (speed > player.minDragSpeed) {
-      speed = unlimitedSpeed - player.drag
+    if (speed > entity.minDragSpeed) {
+      speed = unlimitedSpeed - entity.drag
     }
     if (speed < 0) {
       speed = 0
-    } else if (speed > model.maxSpeed) {
-      speed = model.maxSpeed
+    } else if (speed > entity.maxSpeed) {
+      speed = entity.maxSpeed
     }
     vx = speed * vx / unlimitedSpeed
     vy = speed * vy / unlimitedSpeed
@@ -81,48 +111,53 @@ function tick() {
   // and jump? Not quite enjoyable yet.
   vy += model.gravity
 
-  player.lx = player.x
-  player.ly = player.y
-  player.x += vx
-  player.y += vy
+  entity.lx = entity.x
+  entity.ly = entity.y
+  entity.x += vx
+  entity.y += vy
 
-  // world collisions
-  for (let i = 0; i < player._collisionPoints.length; i++) {
-    let point = player.collisionPoint(i)
+  worldCollisions(entity)
+  windowCollisions(entity)
+}
+
+function worldCollisions(entity) {
+  for (let i = 0; i < entity._collisionPoints.length; i++) {
+    let point = entity.collisionPoint(i)
     const loc = point.map(Math.floor)
     const tile = model.world.tileAt(...loc)
     if (tile.collisionMask &&
-      player.y + player.h > tile.top &&
-      player.y < tile.bottom &&
-      player.x + player.w > tile.left &&
-      player.x < tile.right) {
-      if ((tile.collisionMask & 0b0001) && vy > 0 && player.ly + player.h <= tile.top) {
-        player.y = tile.top - player.h
+        entity.y + entity.h > tile.top &&
+        entity.y < tile.bottom &&
+        entity.x + entity.w > tile.left &&
+        entity.x < tile.right) {
+      if ((tile.collisionMask & 0b0001) && entity.ly + entity.h <= tile.top) {
+        entity.y = tile.top - entity.h
       }
-      if ((tile.collisionMask & 0b0010) && vx < 0 && player.lx >= tile.right) {
-        player.x = tile.right
+      if ((tile.collisionMask & 0b0010) && entity.lx >= tile.right) {
+        entity.x = tile.right
       }
-      if ((tile.collisionMask & 0b0100) && vy < 0 && player.ly >= tile.bottom) {
-        player.y = tile.bottom
+      if ((tile.collisionMask & 0b0100) && entity.ly >= tile.bottom) {
+        entity.y = tile.bottom
       }
-      if ((tile.collisionMask & 0b1000) && vx > 0 && player.lx + player.w <= tile.left) {
-        player.x = tile.left - player.w
+      if ((tile.collisionMask & 0b1000) && entity.lx + entity.w <= tile.left) {
+        entity.x = tile.left - entity.w
       }
     }
   }
+}
 
-  // window collisions
-  if (player.x < 0) {
-    player.x = 0
+function windowCollisions(entity) {
+  if (entity.x < 0) {
+    entity.x = 0
   }
-  if (player.x + player.w > model.w) {
-    player.x = model.w - player.w
+  if (entity.x + entity.w > model.w) {
+    entity.x = model.w - entity.w
   }
-  if (player.y < 0) {
-    player.y = 0
+  if (entity.y < 0) {
+    entity.y = 0
   }
-  if (player.y + player.h > model.h) {
-    player.y = model.h - player.h
+  if (entity.y + entity.h > model.h) {
+    entity.y = model.h - entity.h
   }
 }
 
@@ -158,12 +193,12 @@ async function init() {
   // retrieve resources
   await Promise.all([
     fetch('levels/00.json')
-      .then(json => json.json())
-      .then(level => model.setup(level)),
-    loadImage('img/tilesheet-0.0.1.png')
-      .then(tileSheet => view.setTileSheet(tileSheet, 16)),
+        .then(json => json.json())
+        .then(level => model.setup(level)),
+    loadImage('img/tilesheet-0.0.2.png')
+        .then(tileSheet => view.setTileSheet(tileSheet, 16)),
     loadImage('img/player-0.0.1.png')
-      .then(img => playerSpriteSheet = new SpriteSheet(img, 16)),
+        .then(img => playerSpriteSheet = new SpriteSheet(img, 16))
   ])
 
   handleResize()
@@ -176,3 +211,12 @@ async function init() {
 }
 
 window.onload = init
+
+class Util {
+  static randN() {
+    var u = 0, v = 0;
+    while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+    while(v === 0) v = Math.random();
+    return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+  }
+}
