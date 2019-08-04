@@ -99,11 +99,7 @@ class View {
       this._ctx.fillText(credit, 2, this._h - 4)
       this._ctx.strokeText(credit, 2, this._h - 4)
     }
-<<<<<<< HEAD
     const muteText = isMuted ? 'Unmute' : 'Mute'
-=======
-    const muteText = isMuted ? 'Mute' : 'Unmute'
->>>>>>> f316074d109d123b029734f2f61f133ab6b8a5fb
     this._ctx.fillText(muteText, 2, 8)
     this._ctx.strokeText(muteText, 2, 8)
   }
