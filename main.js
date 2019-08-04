@@ -8,6 +8,7 @@ var backgroundImage
 var models = []
 var dialogueQueue = []
 var collectableCount = 0
+var audio, isMuted = false
 
 const TICK_LENGTH = 1000 / 60
 const FRAME_LENGTH = 1000 / 60
@@ -59,7 +60,8 @@ function gameLoop(tickCount) {
   )
   // draw HUD
   view.drawHUD(
-    collectableCount
+    collectableCount,
+    isMuted
   )
   // draw dialog
   while(dialogueQueue.length > 0) {
@@ -302,6 +304,19 @@ async function init() {
   view = new View(canvas)
   controller = new Controller()
   engine = new Engine(TICK_LENGTH, this.gameLoop)
+
+  audio = document.getElementById('game-music')
+  canvas.addEventListener('click', e => {
+    if(e.offsetX < 120 && e.offsetY < 36) {
+      if(isMuted) {
+        audio.play()
+        isMuted = false
+      } else {
+        audio.pause()
+        isMuted = true
+      }
+    }
+  })
 
   // retrieve resources
   await Promise.all([
