@@ -96,8 +96,11 @@ function updatePlayer() {
   if ('right' in buttonMap && buttonMap['right']) {
     vector[0] += 1
   }
+  if (vector[0] == 0 && vector[1] == 0) {
+    vector = [Util.randN() / 256, Util.randN() / 256]
+  }
   const unlimitedAcc = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1])
-  if (unlimitedAcc != 0) {
+  if (unlimitedAcc > player.acc) {
     vx += vector[0] / unlimitedAcc * player.acc
     vy += vector[1] / unlimitedAcc * player.acc
   }
