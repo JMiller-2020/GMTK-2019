@@ -37,8 +37,8 @@ function gameLoop(tickCount) {
   })
   // draw player
   view.drawEntity(
-    model.player.x - 0.1,
-    model.player.y - 0.1,
+    model.player.x - 3/16,
+    model.player.y - 3/16,
     1,
     1,
     playerSpriteSheet,
@@ -195,7 +195,7 @@ async function init() {
     fetch('levels/00.json')
         .then(json => json.json())
         .then(level => model.setup(level)),
-    loadImage('img/tilesheet-0.0.1.png')
+    loadImage('img/tilesheet-0.0.2.png')
         .then(tileSheet => view.setTileSheet(tileSheet, 16)),
     loadImage('img/player-0.0.1.png')
         .then(img => playerSpriteSheet = new SpriteSheet(img, 16))

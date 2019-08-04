@@ -7,7 +7,7 @@ class Model {
 
     this.gravity = 0.0
 
-    this.player = new Entity(2, 2, 0.8, 0.8)
+    this.player = new Entity(2, 2, 10/16, 10/16)
 
     this.world = new World()
   }
