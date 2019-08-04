@@ -13,11 +13,13 @@ class Engine {
   start() {
     this._running = true
     this._animFrame = requestAnimationFrame(this._tick.bind(this))
+    console.log('engine started')
   }
 
   stop() {
     this._running = false
     cancelAnimationFrame(this._animFrame)
+    console.log('engine stopped')
   }
 
   _tick(timestamp) {

@@ -1,7 +1,7 @@
 'use strict';
 
 var model, view, controller, engine
-var canvas
+var canvas, playerSpriteSheet
 
 const TICK_LENGTH = 1000 / 60
 const FRAME_LENGTH = 1000 / 60
@@ -10,6 +10,12 @@ function main() {
   console.log('starting main.')
 
   engine.start()
+
+  // for debugging
+
+  // setTimeout(() => {
+  //   engine.stop()
+  // }, 10000);
 }
 
 function gameLoop(tickCount) {
@@ -18,12 +24,14 @@ function gameLoop(tickCount) {
   tick()  // maybe use axes too?
 
   view.clear()
-  view.drawWorld(model.world.tiles, model.world.numColumns)
+  view.drawWorld(model.world.textures, model.world.numColumns)
   view.drawPlayer(
-    model.player.x,
-    model.player.y,
-    model.player.w,
-    model.player.h
+    model.player.x - 0.1,
+    model.player.y - 0.1,
+    1,
+    1,
+    playerSpriteSheet,
+    tickCount
   )
 }
 
@@ -76,27 +84,26 @@ function tick() {
   player.y += vy
 
   // world collisions
-  // TODO make tiles only collide with certain faces
   for (let i = 0; i < player._collisionPoints.length; i++) {
     let point = player.collisionPoint(i)
     const loc = point.map(Math.floor)
     const tile = model.world.tileAt(...loc)
-    if (tile.solid &&
-      player.y + player.h > tile.top &&
-      player.y < tile.bottom &&
-      player.x + player.w > tile.left &&
-      player.x < tile.right) {
-      if (vy > 0 && player.ly + player.h <= tile.top) {
+    if (tile.collisionMask &&
+        player.y + player.h > tile.top &&
+        player.y < tile.bottom &&
+        player.x + player.w > tile.left &&
+        player.x < tile.right) {
+      if ((tile.collisionMask & 0b0001) && vy > 0 && player.ly + player.h <= tile.top) {
         player.y = tile.top - player.h
       }
-      if (vy < 0 && player.ly >= tile.bottom) {
+      if ((tile.collisionMask & 0b0010) && vx < 0 && player.lx >= tile.right) {
+        player.x = tile.right
+      }
+      if ((tile.collisionMask & 0b0100) && vy < 0 && player.ly >= tile.bottom) {
         player.y = tile.bottom
       }
-      if (vx > 0 && player.lx + player.w <= tile.left) {
+      if ((tile.collisionMask & 0b1000) && vx > 0 && player.lx + player.w <= tile.left) {
         player.x = tile.left - player.w
-      }
-      if (vx < 0 && player.lx >= tile.right) {
-        player.x = tile.right
       }
     }
   }
@@ -124,11 +131,11 @@ function handleResize() {
   } else {
     h = w / model.ratio
   }
-  view.resize(w, h)
+  view.resize(model.w, model.h, w, h)
 }
 
 function loadImage(url) {
-  return new Promise((res, rej) => {
+  return new Promise((res) => {
     const img = new Image()
     img.onload = () => res(img)
     img.onerror = () => new Error(`Failed to load image at: ${url}`)
@@ -147,14 +154,13 @@ async function init() {
 
   // retrieve resources
   await Promise.all([
-    fetch('tiles.json')
-        .then(json => json.json())
-        .then(tileDict => model.world.setTileDict(tileDict)),
     fetch('levels/00.json')
         .then(json => json.json())
         .then(level => model.setup(level)),
-    loadImage('img/grass.png')
-        .then(tileSheet => view.setTileSheet(tileSheet))
+    loadImage('img/tilesheet-0.0.1.png')
+        .then(tileSheet => view.setTileSheet(tileSheet, 16)),
+    loadImage('img/player-0.0.1.png')
+        .then(img => playerSpriteSheet = new SpriteSheet(img, 16))
   ])
 
   handleResize()

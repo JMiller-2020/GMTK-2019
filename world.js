@@ -6,45 +6,41 @@ class World {
   }
 
   setup(level) {
-    this._tiles = level.tiles
+    this._textures = level.textures
+    this._collisions = level.collisions
     this._columns = level.numColumns
-    if (this.numTiles % this.numColumns != 0) {
+    if(this.numTiles % this.numColumns != 0) {
       console.log(`bad level shape: ${this.numTiles} % ${this.numColumns} != 0`)
     }
   }
 
-  for(let i = 0; index <array.length; i++) {
-  const element = array[index];
-
-}
-
-get tiles() {
-  return this._tiles
-}
-
-get numColumns() {
-  return this._columns
-}
-
-get numRows() {
-  return this.numTiles / this.numColumns
-}
-
-get numTiles() {
-  return this._tiles.length
-}
-
-tileAt(x, y) {
-  return {
-    solid: !!this._tiles[y * this.numColumns + x],
-    left: x,
-    right: x + 1,
-    top: y,
-    bottom: y + 1
+  get textures() {
+    return this._textures
   }
-}
 
-setTileDict(tileDict) {
-  this._tileDict = tileDict
-}
+  get numColumns() {
+    return this._columns
+  }
+
+  get numRows() {
+    return this.numTiles / this.numColumns
+  }
+
+  get numTiles() {
+    return this._textures.length
+  }
+
+  tileAt(x, y) {
+    const tileIdx = y * this.numColumns + x
+    const texId = this._textures[tileIdx]
+    const collisionMask = this._collisions[tileIdx]
+    return {
+      texId,
+      collisionMask,
+      left: x,
+      right: x + 1,
+      top: y,
+      bottom: y + 1
+    }
+  }
 }
